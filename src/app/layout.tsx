@@ -1,8 +1,10 @@
-import { ClerkProvider, SignedOut, SignInButton } from '@clerk/nextjs';
+import { ClerkProvider, SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs';
+
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { Landing } from './Landing';
+import Header from '../components/Header/page';
+
 import Home from './page';
 
 const inter = Inter({ subsets: ["latin"] });
@@ -20,18 +22,22 @@ export default function RootLayout({
   return (
     <ClerkProvider>
     <html lang="en">
-      <body className={inter.className}>
+      <body className="min-h-screen font-sans antialiased grainy">
         
         <header>
         
           <div>
+            <Header />
             Login Header
           </div>
           <div>
-            <Landing />
+           
             <SignedOut>
               <SignInButton />
             </SignedOut>
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
           </div>
         </header>
         <Home />
