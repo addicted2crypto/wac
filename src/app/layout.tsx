@@ -26,10 +26,10 @@ export default function RootLayout({
         
         <header>
         
-          <div>
+          
             <Header />
-            Login Header
-          </div>
+            
+          
           <div>
            
             <SignedOut>
