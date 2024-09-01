@@ -49,10 +49,10 @@ Appliance acting up? Schedule your consult<span className='text-red-700'> before
     
   
     <div>
-  <div>schedule apt here</div>
+  <div className='hover:animate-bounce'>Schedule a consult here</div>
   
-   <div className='ml-2 h-5 w-5'/>
-   <textarea>Add atributes of your problem here</textarea>
+   <div className='w-max text-[#000]'/>
+   <textarea placeholder='Add errors and problems here'color='black' className='min-w-max bg-[#3c77c9] text-[#000] rounded-sm  '></textarea>
    </div>
   )}
   </div>
