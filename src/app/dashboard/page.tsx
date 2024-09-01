@@ -4,18 +4,23 @@ import { useUser } from '@clerk/nextjs';
 import React from 'react';
 
 export default function Dashboard() {
-  const {isSignedIn, user, isLoaded } = useUser()
-    if(!isLoaded){
-      return <SignIn />
-    } else {
-  return (
-    <div className='flex flex-auto'>
-    <div className='text-sm'>Dashboard for all logged in users
-      <div className='text-lg justify-center items-center'>Welcome {user?.fullName}<UserButton /></div>
+  const { isSignedIn, user, isLoaded } = useUser()
 
-    </div>
-    <SignOutButton />
+  return (
+    <div className='flex items-center justify-center bg-[#fff]'>
+      <div className='text-sm '>Dashboard for all logged in users
+        <div className='text-lg absolute left-[5rem]'>Welcome to your applaince solutions page!</div>
+
+      </div>
+      <div className='absolute right-10 top-10'>
+        <div className='text-[#000]'>{user?.fullName}</div>
+
+      </div>
+      <div className='absolute right-2 top-2 overflow-auto'>
+        <SignOutButton />
+      </div>
+
     </div>
   )
 }
-}
+
