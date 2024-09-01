@@ -1,9 +1,15 @@
 import WidthWrapper from '@/components/ui/Widthwrapper';
+;
+import { clerkClient } from '@clerk/nextjs/server';
 import Image from "next/image";
 
 
 
+
 export default function Home() {
+  const  userId  = 'user_123';
+  const User =  clerkClient?.users.getUser(userId);
+  
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <WidthWrapper className="mb-12 mt-28 sm:mt-40 bg-slate-300 flex flex-col items-center justify-center text-center">
@@ -33,7 +39,13 @@ Appliance acting up? Schedule your consult<span className='text-red-700'> before
   className: 'mt-12 mb-12'
   
 }href='/dashboard' target='_blank'> */}
-  Schedule Apt <div className='ml-2 h-5 w-5'/>
+  {!User ? 
+   <div>Sign-in</div> 
+   : 
+   <form>Fill out data for consult</form>
+  } 
+  <div>schedule apt</div>
+   <div className='ml-2 h-5 w-5'/>
 {/* </Link> */}
 </WidthWrapper>
 {/* value proposition section */}                                                                                             

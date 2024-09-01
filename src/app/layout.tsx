@@ -6,6 +6,7 @@ import "./globals.css";
 import Header from '../components/Header/page';
 
 import Home from './page';
+import Dashboard from './dashboard/page';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,7 +24,13 @@ export default function RootLayout({
     <ClerkProvider>
     <html lang="en">
       <body className="min-h-screen font-sans antialiased grainy">
-        
+      <SignedOut>
+              <SignInButton />
+            </SignedOut>
+            <SignedIn>
+              <Dashboard />
+              <UserButton />
+            </SignedIn>
         <header>
         
           
@@ -32,12 +39,7 @@ export default function RootLayout({
           
           <div>
            
-            <SignedOut>
-              <SignInButton />
-            </SignedOut>
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
+            
           </div>
         </header>
         <Home />

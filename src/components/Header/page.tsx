@@ -1,4 +1,4 @@
-import { SignIn } from '@clerk/nextjs'
+import { SignIn, SignUp } from '@clerk/nextjs'
 import {  clerkClient } from '@clerk/nextjs/server'
 import Link from 'next/link'
 import React from 'react'
@@ -40,6 +40,7 @@ const Navbar = () => {
                       >
                           Sign in
                           <SignIn />
+                          <SignUp/>
                       {/* </LoginLink>
                       <RegisterLink
                       className={buttonVariants({
@@ -53,7 +54,7 @@ const Navbar = () => {
                       </>
                       ) : (
                           <Link 
-                           href='/dashboard'
+                           href='././dashboard'
                            className='text-sm'>Dashboard</Link>
                           
                           
