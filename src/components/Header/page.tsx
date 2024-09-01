@@ -41,15 +41,9 @@ const Navbar = () => {
                           Sign in
                           <SignIn />
                           <SignUp/>
-                      {/* </LoginLink>
-                      <RegisterLink
-                      className={buttonVariants({
-                           */}
-                          {/* size: "sm", */}
-                      {/* })}> */}
+                     
                           Schedule APT
-                          {/* <ArrowRight className='ml-3.5 h-4 w-4' />
-                      </RegisterLink> */}
+                     
                       </Link>
                       </>
                       ) : (
