@@ -10,7 +10,9 @@ export default function Dashboard() {
     <div className='flex items-center justify-center bg-[#fff]'>
       <div className='text-sm '>Dashboard for all logged in users
         <div className='text-lg absolute left-[5rem]'>Welcome to your applaince solutions page!</div>
-
+        <div className='pt-8'>
+        <textarea placeholder='Upload text'></textarea>
+        </div>
       </div>
       <div className='absolute right-10 top-10'>
         <div className='text-[#000]'>{user?.fullName}</div>
