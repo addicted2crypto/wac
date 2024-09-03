@@ -28,11 +28,11 @@ export default function RootLayout({
               <SignInButton />
             </SignedOut>
             <SignedIn>
-              <Dashboard />
+             
               <UserButton />
             </SignedIn>
         <header>
-        
+        <Dashboard />
           
             <Header />
             

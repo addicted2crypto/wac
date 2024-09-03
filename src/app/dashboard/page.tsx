@@ -10,8 +10,8 @@ export default function Dashboard() {
     <div className='flex items-center justify-center bg-[#fff]'>
       <div className='text-sm '>Dashboard for all logged in users
         <div className='text-lg absolute left-[5rem]'>Welcome to your applaince solutions page!</div>
-        <div className='pt-8'>
-        <textarea placeholder='Submit appliance Errors and problems here 👇'></textarea>
+        <div className='pt-8 w-max'>
+        <textarea placeholder='Submit appliance Errors and problems here 👇' className='w-[23rem] '></textarea>
         </div>
       </div>
       <div className='absolute right-10 top-10'>
