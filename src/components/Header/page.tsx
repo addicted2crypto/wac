@@ -1,21 +1,24 @@
-import { SignIn, SignUp } from '@clerk/nextjs'
-import {  clerkClient } from '@clerk/nextjs/server'
-import Link from 'next/link'
-import React from 'react'
-import WidthWrapper from '../ui/Widthwrapper'
+import { SignIn, SignUp, useAuth } from '@clerk/nextjs';
+import {  clerkClient } from '@clerk/nextjs/server';
+
+import Link from 'next/link';
+import React from 'react';
+import WidthWrapper from '../ui/Widthwrapper';
 
 
 
 
+const Navbar = ()  => {
+  // const {isLoaded, userId, sessionId, getToken } = useAuth();
+  // console.log(userId, sessionId, getToken, isLoaded);
+  const  userId  = 'users_111';
+  const response =  clerkClient.users.getUser(userId);
 
-const Navbar = () => {
-  const  userId  = 'user_123';
-  const response =  clerkClient?.users.getUser(userId);
-  console.log(response);
-  if(userId){
-    console.log(userId);
-  }
+  // if(userId){
+  //   console.log(userId);
+  // }
   return (
+     
       <nav className="sticky h-14 inset-x-0 top-0 z-30 w-full border-b border-gray-200 bg-white/60 backdrop-blur-lg transition-all">
           <WidthWrapper>
               <div className="flex h-14 items-center justify-between border-b border-zinc-900">
