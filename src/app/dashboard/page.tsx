@@ -16,7 +16,7 @@ export default function Dashboard() {
       </div>
       <div className='absolute right-6 top-6'>
         <div className='text-[#000]'>{user?.fullName}</div>
-      
+        {user?.username}
       </div>
       <div className='absolute right-2 top-2 overflow-auto'>
         <SignOutButton />
