@@ -9,7 +9,7 @@ export default function Dashboard() {
   return (
     <div className='flex items-center justify-center bg-[#fff]'>
       <div className='text-sm '>Dashboard for all logged in users
-        <div className='text-lg absolute left-[3rem] overflow-auto'>Welcome to your applaince solutions page!</div>
+        <div className='text-2xl text-sky-950 absolute left-[3rem] overflow-auto'>Welcome to your applaince solutions page!</div>
         <div className='pt-8 w-max'>
         <textarea placeholder='Submit appliance Errors and problems here 👇' className='w-[23rem] '></textarea>
         </div>
