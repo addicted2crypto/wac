@@ -15,8 +15,8 @@ export default function Dashboard() {
         <textarea placeholder='Submit appliance Errors and problems here 👇' className='w-[23rem] '></textarea>
         </div>
       </div>
-      <div className='absolute right-6 top-6'>
-        <div className='text-[#000]'>{user?.fullName}</div>
+      <div className='absolute right-8 top-10'>
+        <div className='text-[#000]'>100 years of appliance repair experience at your finger tips</div>
      
       </div>
       <div className='absolute right-2 top-2 overflow-auto'>
