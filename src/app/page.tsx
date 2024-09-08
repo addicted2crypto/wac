@@ -22,7 +22,7 @@ export default function Home() {
   </span>
 </p>
 <h1 className='max-w-6xl text-5xl font-bold md:text-6xl lg:text-7xl'>
-Appliance acting up? Schedule your consult<span className='text-red-700'> before wasting <span className="text-green-600"> $$$$ </span></span> on an in person diagnostic.
+Do you have an Appliance that is acting up? Schedule your consult<span className='text-red-700'> before wasting <span className="text-green-600"> $$$$ </span></span> on an in person diagnostic.
 </h1>
 <p className='mt-6 max-w-pros text-zinc-800 sm:text-lg'>
   William's Consult app allows you to upload pictures as PDF documents. 
@@ -49,10 +49,10 @@ Appliance acting up? Schedule your consult<span className='text-red-700'> before
     
   
     <div>
-  <div className='hover:animate-bounce'>Schedule a consult here</div>
+  <div className='hover:animate-bounce'>I value your input. Leave a review here!</div>
   
    <div className='w-max text-[#000]'/>
-   <textarea placeholder='Add errors and problems here'color='black' className='min-w-max bg-[#3c77c9] text-[#000] rounded-sm  '></textarea>
+   <textarea placeholder=' Rate your experience 👍 or 👎 👇'color='black' className='min-w-max bg-[#3c77c9] text-[#000] rounded-sm  '></textarea>
    </div>
   )}
   </div>
