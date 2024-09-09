@@ -7,6 +7,7 @@ import Header from '../components/Header/page';
 
 import Home from './page';
 import Dashboard from './dashboard/page';
+import Navbar from '../components/Header/page';
 
 const inter = Inter({ subsets: ["latin"] });
 
