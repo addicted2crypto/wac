@@ -34,6 +34,6 @@ export default clientPromise;
 
 export async function connectToDatabase() {
   const client = await clientPromise;
-  const db = client.db('your_database_name');
+  const db = client.db('WAC');
   return { client, db };
 }
