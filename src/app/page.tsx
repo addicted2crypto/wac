@@ -8,7 +8,7 @@ import Image from "next/image";
 
 
 export default function Home() {
-  const  userId  = 'user_123';
+  const  userId  = '';
   const User =  clerkClient?.users.getUser(userId);
   
   return (
