@@ -6,7 +6,8 @@ import { UploadButton } from "@uploadthing/react";
 import  { UploadFileResult }  from 'uploadthing/types';
 import React, { useEffect, useState } from 'react';
 import { OurFileRouter } from '../api/uploadthing/core';
-import { metadata } from '../layout';
+import { ClientUploadedFileData } from 'uploadthing/types';
+import PreviousMap from 'postcss/lib/previous-map';
 
 
 export default function Dashboard() {
@@ -96,12 +97,13 @@ return (
           <UploadButton<OurFileRouter, "imageUploader">
             endpoint='imageUploader'
             
-            onClientUploadComplete={(res: UploadFileResult[]) => {
+            onClientUploadComplete={(res: ClientUploadedFileData<null>[]) => {
               if (res) {
-                const newUrls = res
-                .filter((file) => 'data' in file && file.data !== null)
-                .map((file) => 'data');
-                // setUploadedFiles(prev => [...prev, ...newUrls]);
+                //change setUploadedFiles (PREV here?)
+                setUploadedFiles(res => {
+               const newUrls = res.map((file) => file);
+               return [...res, ...newUrls];
+              });
                 alert('Upload Complete');
               }
             }}
@@ -119,7 +121,7 @@ return (
               <p>Uploaded files:</p>
               <ul>
                 {uploadedFiles.map((url, index) => (
-                  <li key={index}>{url}</li>
+                  <li key={index}>{index}</li>
                 ))}
               </ul>
             </div>
@@ -127,7 +129,7 @@ return (
           <input
             type="file"
             multiple
-            onChange={handleFileChange}
+            onChange={handleSubmit}
             className='mt-4'
           />
           <Button variant='outline'
