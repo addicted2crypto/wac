@@ -3,16 +3,14 @@ import { Button } from '@/components/ui/button';
 import { SignIn, SignedIn, SignedOut, SignOutButton } from '@clerk/nextjs';
 import { useUser } from '@clerk/nextjs';
 import { UploadButton } from "@uploadthing/react";
-import  { UploadFileResult }  from 'uploadthing/types';
 import React, { useEffect, useState } from 'react';
 import { OurFileRouter } from '../api/uploadthing/core';
-import { ClientUploadedFileData } from 'uploadthing/types';
-import PreviousMap from 'postcss/lib/previous-map';
+import { ClientUploadedFileData, UploadedFileData, UploadFileResult } from 'uploadthing/types';
 
 
 export default function Dashboard() {
-  const { user } = useUser();
-  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+  const { user, isLoaded } = useUser();
+  const [uploadedFiles, setUploadedFiles] = useState<ClientUploadedFileData<null>[]>([]);
   const [textContent, setTextContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState('');
@@ -28,6 +26,10 @@ export default function Dashboard() {
   // };
 
   const handleSubmit = async () => {
+    if(!isLoaded || !user){
+      setSubmitStatus('User not loaded. Please try again.')
+    }
+
     setIsSubmitting(true);
     setSubmitStatus('');
 
@@ -44,31 +46,35 @@ export default function Dashboard() {
 
       },
       body: JSON.stringify({
-        userId: user?.id,
+        
         textContent,
-        fileUrls: uploadedFiles,
+        fileUrls: uploadedFiles.map(file => file.url),
       }),
     });
 
 
+    if(!response.ok) {
+      throw new Error(`Http error! status: ${response.status}`)
+    }
 
+    const data = await response.json();
 
-
-    if (response.ok) {
       setSubmitStatus('Submission successful!');
       setTextContent('');
       setUploadedFiles([]);
 
-    } else {
-      setSubmitStatus('Submission failed. Please try again.');
+    // } else {
+    //   const errorData = await response.json()
+    //   setSubmitStatus(`Submission failed: ${errorData.message}`);
 
-    }
+    // }
   } catch (error) {
     console.error('Submission error:', error);
     setSubmitStatus('An error occurred. Please try again.');
-
-  }
+ 
+  } finally {
   setIsSubmitting(false);
+  }
 };
 
 return (
@@ -77,7 +83,7 @@ return (
     <SignedIn>
       <div className='max-w-4xl mx-auto '>
         <div className='flex justify-between items-center mb-8'>
-          <h1 className='text-2xl text-sky-950 absolute left-[3rem] overflow-auto'>Welcome to your applaince solutions page!</h1>
+          <h1 className='pt-6 text-2xl text-sky-950 absolute left-[3rem] overflow-auto'>Welcome to your applaince solutions page!</h1>
 
         </div>
         <div className='absolute top-6 right-6'>
@@ -99,14 +105,19 @@ return (
             
             onClientUploadComplete={(res: ClientUploadedFileData<null>[]) => {
               if (res) {
+               
                 //change setUploadedFiles (PREV here?)
-                setUploadedFiles(res => {
-               const newUrls = res.map((file) => file);
-               return [...res, ...newUrls];
-              });
+                setUploadedFiles(prevFiles => [...prevFiles, ...res]);
                 alert('Upload Complete');
               }
             }}
+            //     (res => {
+            //    const newUrls = res.map((file) => file);
+            //    return [...res, ...newUrls];
+            //   });
+            //     alert('Upload Complete');
+            //   }
+            // }}
             onUploadError={(error) => {
               console.log('Error:', error);
               
@@ -120,18 +131,18 @@ return (
             <div className='mt-4'>
               <p>Uploaded files:</p>
               <ul>
-                {uploadedFiles.map((url, index) => (
-                  <li key={index}>{index}</li>
+                {uploadedFiles.map((file, index) => (
+                  <li key={index}>{file.name}</li>
                 ))}
               </ul>
             </div>
           )}
-          <input
+          {/* <input
             type="file"
             multiple
             onChange={handleSubmit}
             className='mt-4'
-          />
+          /> */}
           <Button variant='outline'
             onClick={handleSubmit}
             disabled={isSubmitting}

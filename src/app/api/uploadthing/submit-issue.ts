@@ -1,6 +1,5 @@
-import { connectToDatabase } from '@/lib/mongodb';
 import { NextApiRequest, NextApiResponse } from 'next';
-
+import { getAuth } from '@clerk/nextjs/server';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -8,22 +7,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const { userId, textContent, fileUrls } = req.body;
+    const { userId } = getAuth(req);
+    
+    if (!userId) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
 
-    const { client, db } = await connectToDatabase();
+    const { textContent, fileUrls } = req.body;
 
-    const collection = db.collection('appliance_issues');
+    // Here you would typically save this data to your database
+    console.log('Received submission:', { userId, textContent, fileUrls });
 
-    const result = await collection.insertOne({
-      userId,
-      textContent,
-      fileUrls,
-      createdAt: new Date(),
-    });
-
-    client.close();
-
-    res.status(200).json({ message: 'Issue submitted successfully', id: result.insertedId });
+    res.status(200).json({ message: 'Issue submitted successfully' });
   } catch (error) {
     console.error('API route error:', error);
     res.status(500).json({ message: 'Internal server error' });
