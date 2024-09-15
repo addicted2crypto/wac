@@ -19,7 +19,12 @@ if(!client) {
 
 interface SubmitIssueRequestBody {
   textContent: string;
-  files?: File[];
+  files?: {
+    name: string;
+    type: string;
+    size: number;
+    data: ArrayBuffer
+  }[]; 
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -53,13 +58,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (files && Array.isArray(files) && files.length > 0 ) {
       const uploadPromises = files.map(async (file) => {
       try {
-        const uploadedFile = await utapi.uploadFiles(file);
-        if (uploadedFile.error){
-          console.error(`Error uploading file: ${uploadedFile.error.message}`)
-          return null;
+        const fileBob = new Blob([file.data], { type: file.type});
+        const fileEsque = new File([fileBob], file.name, { type: file.type})
 
-        }
-        return uploadedFile.data?.url;
+        const uploadedFile = await utapi.uploadFiles([fileEsque]);
+        
+        // if (uploadedFile.error ){
+        //   console.error('File upload failed: No URL returned');
+        //   return null;
+
+        // }
+        return uploadedFile[0].data?.url || null;
       } catch (error) {
         console.error('Error uploading file:', error);
         return null;
