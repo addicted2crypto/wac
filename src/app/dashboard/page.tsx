@@ -4,7 +4,7 @@ import { SignIn, SignedIn, SignedOut, SignOutButton } from '@clerk/nextjs';
 import { useUser } from '@clerk/nextjs';
 import { UploadButton } from "@uploadthing/react";
 import React, { useEffect, useState } from 'react';
-import { OurFileRouter } from '../api/uploadthing/core';
+import { OurFileRouter } from '../api/core';
 import { ClientUploadedFileData, UploadedFileData, UploadFileResult } from 'uploadthing/types';
 
 
@@ -22,7 +22,7 @@ if(!isLoaded){
 
 if (!isSignedIn) {
   return (
-    <div>
+    <div className='text-sm'>
       <h1>Please sign in to access the dashboard</h1>
       <SignIn />
     </div>
@@ -34,6 +34,7 @@ if (!isSignedIn) {
   const handleSubmit = async () => {
     if(!isLoaded || !user){
       setSubmitStatus('User not loaded. Please try again.')
+      return;
     }
 
     setIsSubmitting(true);
@@ -55,6 +56,7 @@ if (!isSignedIn) {
         
         textContent,
         fileUrls: uploadedFiles.map(file => file.url),
+        userId: user.id,
       }),
     });
 
