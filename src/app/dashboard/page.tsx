@@ -9,21 +9,27 @@ import { ClientUploadedFileData, UploadedFileData, UploadFileResult } from 'uplo
 
 
 export default function Dashboard() {
-  const { user, isLoaded } = useUser();
+  const { user, isLoaded, isSignedIn } = useUser();
   const [uploadedFiles, setUploadedFiles] = useState<ClientUploadedFileData<null>[]>([]);
   const [textContent, setTextContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState('');
 
 
+if(!isLoaded){
+  return <div>Loading...</div>
+}
 
+if (!isSignedIn) {
+  return (
+    <div>
+      <h1>Please sign in to access the dashboard</h1>
+      <SignIn />
+    </div>
+  )
+}
 
-
-  // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   if(e.target.files){
-  //   setFiles(Array.from(e.target.files));
-  //   }
-  // };
+ 
 
   const handleSubmit = async () => {
     if(!isLoaded || !user){
@@ -63,11 +69,7 @@ export default function Dashboard() {
       setTextContent('');
       setUploadedFiles([]);
 
-    // } else {
-    //   const errorData = await response.json()
-    //   setSubmitStatus(`Submission failed: ${errorData.message}`);
-
-    // }
+    
   } catch (error) {
     console.error('Submission error:', error);
     setSubmitStatus('An error occurred. Please try again.');

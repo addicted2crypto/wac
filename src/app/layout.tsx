@@ -22,9 +22,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
+    
     <html lang="en">
+      <ClerkProvider>
       <body className="min-h-screen font-sans antialiased grainy">
+      
       <SignedOut>
               <SignInButton />
             </SignedOut>
@@ -45,8 +47,10 @@ export default function RootLayout({
         </header>
         <Home />
         {children}
-        </body>
+       
+        </body> 
+        </ClerkProvider>
     </html>
-    </ClerkProvider>
+    
   );
 }

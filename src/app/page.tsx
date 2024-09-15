@@ -43,13 +43,13 @@ Do you have an Appliance that is acting up? Schedule your consult<span className
 <div>
   {!User ? (
     
-   <div>Sign-in </div>
+   <div>Sign-in</div>
    
    ) :(
     
   
     <div>
-  <div className='hover:animate-bounce'>I value your input. Leave a review here!</div>
+  <div className='hover:animate-bounce'>We value your input. Leave a review here!</div>
   
    <div className='w-max text-[#000]'/>
    <textarea placeholder=' Rate your experience 👍 or 👎 👇'color='black' className='min-w-max bg-[#3c77c9] text-[#000] rounded-sm  '></textarea>
