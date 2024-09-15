@@ -22,35 +22,35 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    
+
     <html lang="en">
       <ClerkProvider>
-      <body className="min-h-screen font-sans antialiased grainy">
-      
-      <SignedOut>
-              <SignInButton />
-            </SignedOut>
-            <SignedIn>
-             
-              <UserButton />
-            </SignedIn>
-        <header>
-        <Dashboard />
-          
+        <body className="min-h-screen font-sans antialiased grainy">
+
+          <SignedOut>
+            <SignInButton />
+          </SignedOut>
+          <SignedIn>
+
+            <UserButton afterSignOutUrl='/'/>
+          </SignedIn>
+          <header>
+            <Dashboard />
+
             <Header />
-            
-          
-          <div>
-           
-            
-          </div>
-        </header>
-        <Home />
-        {children}
-       
-        </body> 
-        </ClerkProvider>
+
+
+            <div>
+
+
+            </div>
+          </header>
+          <Home />
+          {children}
+
+        </body>
+      </ClerkProvider>
     </html>
-    
+
   );
 }

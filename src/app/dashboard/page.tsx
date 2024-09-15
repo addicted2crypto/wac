@@ -74,7 +74,7 @@ if (!isSignedIn) {
     
   } catch (error) {
     console.error('Submission error:', error);
-    setSubmitStatus('An error occurred. Please try again.');
+    setSubmitStatus(`An error occurred: ${error}`);
  
   } finally {
   setIsSubmitting(false);
