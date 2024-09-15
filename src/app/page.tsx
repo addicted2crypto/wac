@@ -43,7 +43,7 @@ Do you have an Appliance that is acting up? Schedule your consult<span className
 <div>
   {!User ? (
     
-   <div>Sign-in</div>
+   <div>/</div>
    
    ) :(
     

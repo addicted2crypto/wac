@@ -11,12 +11,17 @@ import WidthWrapper from '../ui/Widthwrapper';
 const Navbar = ()  => {
   // const {isLoaded, userId, sessionId, getToken } = useAuth();
   // console.log(userId, sessionId, getToken, isLoaded);
-  const  userId  = 'users_111';
-  const response =  clerkClient.users.getUser(userId);
+  const  userId  = '';
+  const User =  clerkClient.users.getUser(userId);
 
-  // if(userId){
-  //   console.log(userId);
-  // }
+    if(!userId){
+        <div>Please sign in...</div>
+    }
+
+  if(userId){
+    console.log(userId);
+
+  }
   return (
      
       <nav className="sticky h-14 inset-x-0 top-0 z-30 w-full border-b border-gray-200 bg-white/60 backdrop-blur-lg transition-all">
