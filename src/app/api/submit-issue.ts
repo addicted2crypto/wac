@@ -13,6 +13,10 @@ if(!uri){
 
 let client: MongoClient | null = null;
 
+if(!client) {
+  client = new MongoClient(uri);
+}
+
 interface SubmitIssueRequestBody {
   textContent: string;
   files?: File[];

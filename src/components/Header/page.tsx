@@ -41,18 +41,7 @@ const Navbar = ()  => {
                           // size: "sm"
                       >Price
                       </Link>
-                      <Link href="/sign-in"
-                      className='text:sm'
-                          // variant: "ghost",
-                          // size: "sm",
-                      >
-                          Sign in
-                          <SignIn />
-                          <SignUp/>
                      
-                          Schedule APT
-                     
-                      </Link>
                       </>
                       ) : (
                           <Link 
