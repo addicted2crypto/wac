@@ -3,7 +3,7 @@ import { getAuth } from '@clerk/nextjs/server';
 import { UTApi } from 'uploadthing/server';
 import { MongoClient } from 'mongodb';
 
-const uri = process.env.MONGO_URI;
+const uri = process.env.MONGODB_URI;
 const utapi = new UTApi();
 
 if(!uri){
@@ -47,7 +47,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       await client.connect();
     }
 
-    const db = client.db('WAC');
+    const db = client.db('APPLIANCE_CONSULT');
 
     const issues = db.collection('issues');
 

@@ -54,7 +54,8 @@ if (!isSignedIn) {
       },
       body: JSON.stringify({
         
-        textContent,
+        textContent: "Your issue content",
+        files: uploadedFiles,
         fileUrls: uploadedFiles.map(file => file.url),
         userId: user.id,
       }),
