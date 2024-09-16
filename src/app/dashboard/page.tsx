@@ -6,6 +6,7 @@ import { UploadButton } from "@uploadthing/react";
 import React, { useEffect, useState } from 'react';
 import { OurFileRouter } from '../api/core';
 import { ClientUploadedFileData, UploadedFileData, UploadFileResult } from 'uploadthing/types';
+import { clerkClient, User } from '@clerk/nextjs/dist/types/server';
 
 
 export default function Dashboard() {
@@ -142,12 +143,12 @@ return (
               </ul>
             </div>
           )}
-          {/* <input
+          <input
             type="file"
             multiple
             onChange={handleSubmit}
             className='mt-4'
-          /> */}
+          />
           <Button variant='outline'
             onClick={handleSubmit}
             disabled={isSubmitting}
