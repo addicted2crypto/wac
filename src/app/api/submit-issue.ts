@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { getAuth } from '@clerk/nextjs/server';
 import { UTApi } from 'uploadthing/server';
 import { MongoClient } from 'mongodb';
+import { NextResponse } from 'next/server';
 
 const uri = process.env.MONGODB_URI;
 const utapi = new UTApi();
@@ -13,9 +14,9 @@ if(!uri){
 
 let client: MongoClient | null = null;
 
-if(!client) {
-  client = new MongoClient(uri);
-}
+// if(!client) {
+//   client = new MongoClient(uri);
+// }
 
 interface SubmitIssueRequestBody {
   textContent: string;
@@ -27,20 +28,20 @@ interface SubmitIssueRequestBody {
   }[]; 
 }
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ message: 'Method not allowed' });
-  }
+export  async function POST(req: NextApiRequest, res: NextApiResponse) {
+  // if (req.method !== 'POST') {
+  //   return res.status(405).json({ message: 'Method not allowed' });
+  // }
 
   try {
     const { userId } = getAuth(req);
     console.log('Extracted userId:', userId);
 
     if (!userId) {
-      return res.status(401).json({ message: 'Unauthorized' });
+      return NextResponse.json({ message: 'Unauthorized' }, {status: 401});
     }
 
-    const { textContent, files } = req.body as SubmitIssueRequestBody;
+    const { textContent, files } = await req.body as SubmitIssueRequestBody;
 
     if (!client) {
       client = new MongoClient(uri as string);
@@ -88,9 +89,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   console.log('Saved to MongoDB:', result.insertedId);
 
-    res.status(200).json({ message: 'Issue submitted successfully' });
+    // res.status(200).json({ message: 'Issue submitted successfully' });
+    return NextResponse.json({ message: 'Issue submitted successfully'}, { status: 500})
   } catch (error) {
     console.error('API route error:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    // res.status(500).json({ message: 'Internal server error' });
+    return NextResponse.json({ message: 'Internal server error'}, { status: 500 })
   }
 }

@@ -6,7 +6,7 @@ import { UploadButton } from "@uploadthing/react";
 import React, { useEffect, useState } from 'react';
 import { OurFileRouter } from '../api/core';
 import { ClientUploadedFileData, UploadedFileData, UploadFileResult } from 'uploadthing/types';
-import { clerkClient, User } from '@clerk/nextjs/dist/types/server';
+
 
 
 export default function Dashboard() {
@@ -68,18 +68,19 @@ if (!isSignedIn) {
     }
 
     const data = await response.json();
-
-      setSubmitStatus('Submission successful!');
-      setTextContent(data);
-      setUploadedFiles([]);
+      console.log('Submission successful:', data)
+      // setSubmitStatus('Submission successful!', data);
+      // setTextContent();
+      // setUploadedFiles([]);
 
     
   } catch (error) {
     console.error('Submission error:', error);
     setSubmitStatus(`An error occurred: ${error}`);
  
-  } finally {
-  setIsSubmitting(false);
+  // } finally {
+  // setIsSubmitting(false);
+  // }
   }
 };
 
