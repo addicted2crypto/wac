@@ -70,7 +70,7 @@ if (!isSignedIn) {
     const data = await response.json();
 
       setSubmitStatus('Submission successful!');
-      setTextContent('');
+      setTextContent(data);
       setUploadedFiles([]);
 
     
