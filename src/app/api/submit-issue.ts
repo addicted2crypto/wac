@@ -29,16 +29,16 @@ interface SubmitIssueRequestBody {
 }
 
 export  async function POST(req: NextApiRequest, res: NextApiResponse) {
-  // if (req.method !== 'POST') {
-  //   return res.status(405).json({ message: 'Method not allowed' });
-  // }
+  if (req.method !== 'POST') {
+    return res.status(405).json({ message: 'Method not allowed' });
+  }
 
   try {
     const { userId } = getAuth(req);
     console.log('Extracted userId:', userId);
 
     if (!userId) {
-      return NextResponse.json({ message: 'Unauthorized' }, {status: 401});
+      return res.status(401).json({ message: 'Unauthorized' });
     }
 
     const { textContent, files } = await req.body as SubmitIssueRequestBody;
@@ -90,10 +90,10 @@ export  async function POST(req: NextApiRequest, res: NextApiResponse) {
   console.log('Saved to MongoDB:', result.insertedId);
 
     // res.status(200).json({ message: 'Issue submitted successfully' });
-    return NextResponse.json({ message: 'Issue submitted successfully'}, { status: 500})
+    return res.status(200).json({ message: 'Issue submitted successfully'})
   } catch (error) {
     console.error('API route error:', error);
     // res.status(500).json({ message: 'Internal server error' });
-    return NextResponse.json({ message: 'Internal server error'}, { status: 500 })
+    return res.status(500).json({ message: 'Internal server error'})
   }
 }

@@ -55,9 +55,9 @@ if (!isSignedIn) {
       },
       body: JSON.stringify({
         
-        textContent: "Your issue content",
+        textContent: textContent,
         files: uploadedFiles,
-        fileUrls: uploadedFiles.map(file => file.url),
+        fileUrls: uploadedFiles,
         userId: user.id,
       }),
     });
@@ -68,20 +68,20 @@ if (!isSignedIn) {
     }
 
     const data = await response.json();
-      console.log('Submission successful:', data)
-      // setSubmitStatus('Submission successful!', data);
-      // setTextContent();
-      // setUploadedFiles([]);
+      console.log('Submission successful:')
+      setSubmitStatus('Submission successful!');
+      setTextContent('');
+      setUploadedFiles([]);
 
     
   } catch (error) {
     console.error('Submission error:', error);
     setSubmitStatus(`An error occurred: ${error}`);
  
-  // } finally {
-  // setIsSubmitting(false);
-  // }
+  }finally {
+    setIsSubmitting(false);
   }
+
 };
 
 return (
@@ -110,7 +110,7 @@ return (
           <UploadButton<OurFileRouter, "imageUploader">
             endpoint='imageUploader'
             
-            onClientUploadComplete={(res: ClientUploadedFileData<null>[]) => {
+            onClientUploadComplete={(res) => {
               if (res) {
                
                 //change setUploadedFiles (PREV here?)
@@ -144,12 +144,12 @@ return (
               </ul>
             </div>
           )}
-          <input
+          {/* <input
             type="file"
             multiple
             onChange={handleSubmit}
             className='mt-4'
-          />
+          /> */}
           <Button variant='outline'
             onClick={handleSubmit}
             disabled={isSubmitting}
@@ -166,5 +166,5 @@ return (
     </SignedIn>
   </div>
 );
-                }    
-
+ 
+        }
