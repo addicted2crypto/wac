@@ -3,9 +3,9 @@ import { Button } from '@/components/ui/button';
 import { SignIn, SignedIn, SignedOut, SignOutButton } from '@clerk/nextjs';
 import { useUser } from '@clerk/nextjs';
 import { UploadButton } from "@uploadthing/react";
-import React, { useEffect, useState } from 'react';
+import React, {  useState } from 'react';
 import { OurFileRouter } from '../api/core';
-import { ClientUploadedFileData, UploadedFileData, UploadFileResult } from 'uploadthing/types';
+import { ClientUploadedFileData } from 'uploadthing/types';
 
 
 

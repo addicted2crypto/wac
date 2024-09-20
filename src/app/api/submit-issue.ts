@@ -34,6 +34,8 @@ export  async function POST(req: NextApiRequest, res: NextApiResponse) {
   }
 
   try {
+    await client?.connect();
+    console.log('Connected to MongoDB');
     const { userId } = getAuth(req);
     console.log('Extracted userId:', userId);
 
@@ -48,9 +50,9 @@ export  async function POST(req: NextApiRequest, res: NextApiResponse) {
       await client.connect();
     }
 
-    const db = client.db('APPLIANCE_CONSULT');
+    const db = client.db('Appliance_Consult');
 
-    const issues = db.collection('issues');
+    const issues = db.collection('Consult');
 
     let fileUrls: string[] = [];
 
