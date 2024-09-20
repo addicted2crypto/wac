@@ -79,6 +79,7 @@ if (!isSignedIn) {
     setSubmitStatus(`An error occurred: ${error}`);
  
   }finally {
+    console.log('Setting isSubmitting to false')
     setIsSubmitting(false);
   }
 
