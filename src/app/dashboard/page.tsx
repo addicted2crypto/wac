@@ -6,6 +6,7 @@ import { UploadButton } from "@uploadthing/react";
 import React, {  useState } from 'react';
 import { OurFileRouter } from '../api/core';
 import { ClientUploadedFileData } from 'uploadthing/types';
+import { fileURLToPath } from 'url';
 
 
 
@@ -55,10 +56,12 @@ if (!isSignedIn) {
       },
       body: JSON.stringify({
         
+        
         textContent: textContent,
         files: uploadedFiles,
         fileUrls: uploadedFiles,
         userId: user.id,
+      
       }),
     });
 
@@ -68,7 +71,7 @@ if (!isSignedIn) {
     }
 
     const data = await response.json();
-      console.log('Submission successful:')
+      console.log('Submission successful:', data)
       setSubmitStatus('Submission successful!');
       setTextContent('');
       setUploadedFiles([]);

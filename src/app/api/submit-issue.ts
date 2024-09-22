@@ -50,9 +50,9 @@ export  async function handler(req: NextApiRequest, res: NextApiResponse) {
     //   await client.connect();
     // }
 
-    const db = client.db('ImCounsulting');  /* db name */
+    const db = client.db('Appliance_Consult');  /* db name */
 
-    const issues = db.collection('ApplianceDocs');  /* collection name */
+    const issues = db.collection('WAC');  /* collection name */
 
     let fileUrls: string[] = [];
 
@@ -107,5 +107,8 @@ export  async function handler(req: NextApiRequest, res: NextApiResponse) {
     console.error('API route error:', error);
     // res.status(500).json({ message: 'Internal server error' });
     return res.status(500).json({ message: 'Internal server error'})
+  } finally {
+    await client.close();
+    console.log('Disconnected from MongoDb');
   }
 }
