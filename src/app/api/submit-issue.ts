@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { getAuth } from '@clerk/nextjs/server';
 import { UTApi } from 'uploadthing/server';
 import { MongoClient } from 'mongodb';
+import { connectToDatabase } from '@/lib/mongodb';
 
 
 const uri = process.env.MONGODB_URI;
@@ -34,8 +35,10 @@ export  async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 
   try {
-    await client.connect();
+    await connectToDatabase();
+    // const { db } = await connectToDatabase();
     console.log('Connected to MongoDB');
+    // const issues = client.db('ApplianceDocs')
     const { userId } = getAuth(req);
     console.log('Extracted userId:', userId);
       
@@ -50,9 +53,9 @@ export  async function handler(req: NextApiRequest, res: NextApiResponse) {
     //   await client.connect();
     // }
 
-    const db = client.db('Appliance_Consult');  /* db name */
+    const db = client.db('ImCounsulting');  /* db name */
 
-    const issues = db.collection('WAC');  /* collection name */
+    const issues = db.collection('ApplianceDocs');  /* collection name */
 
     let fileUrls: string[] = [];
 

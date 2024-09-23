@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { getAuth } from '@clerk/nextjs/server';
 import { connectToDatabase } from '@/lib/mongodb';
 
+
 // import { sendCustomerNotification, sendAdminNotification } from '../../lib/notifications';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -26,7 +27,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // and we're just storing the file paths
     const { filePaths, textContent } = req.body;
 
-    const upload = await db.collection('uploads').insertOne({
+    const upload = await textContent.insertOne({
       userId,
       filePaths,
       textContent,

@@ -1,4 +1,4 @@
-import { MongoClient, MongoClientOptions } from 'mongodb';
+import { MongoClient, MongoClientOptions, ServerApiVersion } from 'mongodb';
 
 if (!process.env.MONGODB_URI) {
   throw new Error('Please add your Mongo URI to .env.local');
@@ -33,7 +33,15 @@ if (process.env.NODE_ENV === 'development') {
 export default clientPromise;
 
 export async function connectToDatabase() {
-  const client = await clientPromise;
-  const db = client.db('Appliance_Consult');
+  
+  const client = new MongoClient(uri, {
+    serverApi: {
+      version: ServerApiVersion.v1,
+      strict: true,
+      deprecationErrors: true,
+    }
+  });
+  const db = client.db('Appliance_Consult').command({ ping: 1});
+  console.log('I pinged you for deployment. You have successfully connected to MongoDB finally!')
   return { client, db };
 }
