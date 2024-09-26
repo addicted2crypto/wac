@@ -41,7 +41,7 @@ export async function connectToDatabase() {
       deprecationErrors: true,
     }
   });
-  const db = client.db('Appliance_Consult').command({ ping: 1});
+  const db = client.db('ImCounsulting').command({ ping: 1});
   console.log('I pinged you for deployment. You have successfully connected to MongoDB finally!')
   return { client, db };
 }
