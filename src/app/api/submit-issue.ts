@@ -53,9 +53,9 @@ export  async function handler(req: NextApiRequest, res: NextApiResponse) {
     //   await client.connect();
     // }
 
-    const db = client.db('ImCounsulting');  /* db name */
+    const db = client.db('Appliance_Consult');  /* db name */
 
-    const issues = db.collection('ApplianceDocs');  /* collection name */
+    const issues = db.collection('Im_Counsulting');  /* collection name */
 
     let fileUrls: string[] = [];
 

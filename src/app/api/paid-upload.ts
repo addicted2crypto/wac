@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getAuth } from '@clerk/nextjs/server';
 import { connectToDatabase } from '@/lib/mongodb';
+import { sendCustomerNotification } from '@/lib/notifications';
 
 
 // import { sendCustomerNotification, sendAdminNotification } from '../../lib/notifications';
@@ -28,13 +29,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { filePaths, textContent } = req.body;
 
     const upload = await textContent.insertOne({
+     
       userId,
       filePaths,
       textContent: textContent,
       timestamp: new Date(),
     });
 
-    // await sendCustomerNotification(userId, 'Your files have been successfully uploaded.');
+    await sendCustomerNotification(userId, 'Your files have been successfully uploaded.');
     // await sendAdminNotification('New files uploaded by user: ' + userId);
 
     res.status(200).json({ message: 'Upload successful', uploadId: upload.insertedId });

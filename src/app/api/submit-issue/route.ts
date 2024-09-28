@@ -8,10 +8,12 @@
 //   router: ourFileRouter,
 //   // return NextResponse.json({message: 'Issue submitted successfully'}),
 // })
+import { connectToDatabase } from '@/lib/mongodb'
 import { NextResponse } from 'next/server'
 import { ourFileRouter } from '../core'
  
 export async function POST(request: Request) {
+  // router: connectToDatabase
   router: ourFileRouter
   return NextResponse.json({ message: 'Issue submitted successfully' })
 }

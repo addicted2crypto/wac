@@ -10,6 +10,7 @@ import { ClientUploadedFileData } from 'uploadthing/types';
 
 
 
+
 export default function Dashboard() {
   const { user, isLoaded, isSignedIn } = useUser();
   const [uploadedFiles, setUploadedFiles] = useState<ClientUploadedFileData<null>[]>([]);
