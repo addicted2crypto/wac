@@ -30,7 +30,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const upload = await textContent.insertOne({
       userId,
       filePaths,
-      textContent,
+      textContent: textContent,
       timestamp: new Date(),
     });
 
