@@ -35,7 +35,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       textContent: textContent,
       timestamp: new Date(),
     });
-
+    await connectToDatabase();
+     console.log('connected finally')
+     
     await sendCustomerNotification(userId, 'Your files have been successfully uploaded.');
     // await sendAdminNotification('New files uploaded by user: ' + userId);
 
