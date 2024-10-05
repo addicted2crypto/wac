@@ -95,7 +95,7 @@ return (
     <SignedIn>
       <div className='max-w-4xl mx-auto '>
         <div className='flex justify-between items-center mb-8'>
-          <h1 className='pt-6 text-2xl text-sky-950 absolute left-[3rem] overflow-auto'>Welcome to your applaince solutions page!</h1>
+          <h1 className='pt-6 text-2xl text-sky-950 absolute left-[3rem] overflow-auto'>Welcome to your appliance solutions page!</h1>
 
         </div>
         <div className='absolute top-6 right-6'>
