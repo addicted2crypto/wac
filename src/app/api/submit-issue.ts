@@ -13,7 +13,7 @@ if(!uri){
 }
 
 const client = new MongoClient(uri);
-// let client: MongoClient | null = null;
+// const client = new MongoClient(uri) | null = null;
 
 // if(!client) {
 //   client = new MongoClient(uri);
