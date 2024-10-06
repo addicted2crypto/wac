@@ -12,8 +12,8 @@ if(!uri){
   throw new Error( 'Please add your MongoDB uri to .env.local');
 }
 
+
 const client = new MongoClient(uri);
-// const client = new MongoClient(uri) | null = null;
 
 // if(!client) {
 //   client = new MongoClient(uri);
@@ -35,6 +35,8 @@ export  async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 
   try {
+    
+    
     await connectToDatabase();
     // const { db } = await connectToDatabase();
     console.log('Connected to MongoDB');

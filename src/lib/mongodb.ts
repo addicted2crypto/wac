@@ -1,4 +1,4 @@
-import { MongoClient, MongoClientOptions, ServerApiVersion } from 'mongodb';
+import { MongoClient, MongoClientOptions, Db } from 'mongodb';
 
 if (!process.env.MONGODB_URI) {
   throw new Error('Please add your Mongo URI to .env.local');
@@ -14,34 +14,58 @@ declare global {
   var _mongoClientPromise: Promise<MongoClient> | undefined;
 }
 
-if (process.env.NODE_ENV === 'development') {
-  // In development mode, use a global variable so that the value
-  // is preserved across module reloads caused by HMR (Hot Module Replacement).
-  if (!global._mongoClientPromise) {
+if(process.env.NODE_ENV === 'development') {
+  if(!global._mongoClientPromise) {
     client = new MongoClient(uri, options);
     global._mongoClientPromise = client.connect();
+
   }
   clientPromise = global._mongoClientPromise;
 } else {
-  // In production mode, it's best to not use a global variable.
   client = new MongoClient(uri, options);
   clientPromise = client.connect();
 }
 
-// Export a module-scoped MongoClient promise. By doing this in a
-// separate module, the client can be shared across functions.
-export default clientPromise;
+// declare global {
+//   var _mongoClientPromise: Promise<MongoClient> | undefined;
+// }
 
-export async function connectToDatabase() {
-  
-  const client = new MongoClient(uri, {
-    serverApi: {
-      version: ServerApiVersion.v1,
-      strict: true,
-      deprecationErrors: true,
-    }
-  });
-  const db = client.db('Appliance_Consult').command({ ping: 1});
-  console.log('I pinged you for deployment. You have successfully connected to MongoDB finally!')
-  return { client, db };
+// if (process.env.NODE_ENV === 'development') {
+//   // In development mode, use a global variable so that the value
+//   // is preserved across module reloads caused by HMR (Hot Module Replacement).
+//   if (!global._mongoClientPromise) {
+//     client = new MongoClient(uri, options);
+//     global._mongoClientPromise = client.connect();
+//   }
+//   clientPromise = global._mongoClientPromise;
+// } else {
+//   // In production mode, it's best to not use a global variable.
+//   client = new MongoClient(uri, options);
+//   clientPromise = client.connect();
+// }
+
+// // Export a module-scoped MongoClient promise. By doing this in a
+// // separate module, the client can be shared across functions.
+// export default clientPromise;
+
+export async function connectToDatabase(): Promise<{client: MongoClient; db: Db}> {
+  if (!clientPromise) {
+    throw new Error('MongoDB client promise is not initialized');
+  }
+    const client = await clientPromise;
+    const db = client.db('Appliance_Consult');
+    return { client, db};
 }
+
+export default clientPromise;
+//   const client = new MongoClient(uri, {
+//     serverApi: {
+//       version: ServerApiVersion.v1,
+//       strict: true,
+//       deprecationErrors: true,
+//     }
+//   });
+//   const db = client.db('Appliance_Consult').command({ ping: 1});
+//   console.log('I pinged you for deployment. You have successfully connected to MongoDB finally!')
+//   return { client, db };
+// }
