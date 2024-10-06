@@ -6,6 +6,30 @@ import { UploadButton } from "@uploadthing/react";
 import React, {  useState } from 'react';
 import { OurFileRouter } from '../api/core';
 import { ClientUploadedFileData } from 'uploadthing/types';
+import axios from 'axios';
+
+const submitIssue = async (textContent: string, files: File[]) => {
+  try {
+    const formData = new FormData();
+    formData.append('textContent', textContent);
+    files.forEach((file) => formData.append('files', file));
+
+    const response = await axios.post('/api/submit-issue',
+    { textContent, files: files.map(file => ({ name: file.name, type: file.type})) },
+    {
+      headers: {
+        'Content-Type' : 'application/json',
+
+      },
+    }
+    );
+    console.log('API Response:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error submitting issue:', error);
+    throw error;
+  }
+};
 
 
 
@@ -34,7 +58,14 @@ if (!isSignedIn) {
 
  
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    try {
+      const result = await submitIssue(textContent, []);
+      console.log('Submission result:', result);
+    } catch (error) {
+      console.error('An error has occured:', error);
+    }
     if(!isLoaded || !user){
       setSubmitStatus('User not loaded. Please try again.')
       return;
