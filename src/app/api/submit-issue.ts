@@ -79,7 +79,7 @@ export  async function handler(req: NextApiRequest, res: NextApiResponse) {
  
     return res.status(200).json({ message: 'Issue submitted successfully'})
   } catch (error) {
-    console.error('API route error:', error);
+    console.error('API route error :', error);
     // res.status(500).json({ message: 'Internal server error' });
     return res.status(500).json({ message: 'Internal server error'})
   } 

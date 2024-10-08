@@ -6,7 +6,7 @@ if (!process.env.MONGODB_URI) {
 
 const uri: string = process.env.MONGODB_URI;
 const options: MongoClientOptions = {
-  
+ 
 };
 
 declare global {
@@ -43,7 +43,7 @@ export async function connectToDatabase(): Promise<{client: MongoClient; db: Db}
   // }
     const client = await clientPromise;
     console.log('Client connected successfully');
-    const db = client.db('ImCounsulting');
+    const db = client.db('Consult');
     console.log('Database selected: ImCounsulting');
     return { client, db};
 }
