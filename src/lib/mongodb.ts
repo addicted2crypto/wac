@@ -37,7 +37,7 @@ if(process.env.NODE_ENV === 'development') {
 
 
 export async function connectToDatabase(): Promise<{client: MongoClient; db: Db}> {
-  console.log('Connecting to database...');
+  console.log('Connecting to database ...');
   // if (!clientPromise) {
   //   throw new Error('MongoDB client promise is not initialized');
   // }
