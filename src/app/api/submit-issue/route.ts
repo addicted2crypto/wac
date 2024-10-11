@@ -1,15 +1,25 @@
 
 import { connectToDatabase } from '@/lib/mongodb';
-import { NextResponse } from 'next/server';
+import { getAuth } from '@clerk/nextjs/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { ourFileRouter } from '../core';
  
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   console.log('API route /api/submit-issue hit:', new Date().toISOString());
   // router: connectToDatabase
   // router: ourFileRouter
   try {
     const {db} = await connectToDatabase();
     console.log('Connected to MongoDB');
+
+    const { userId } = getAuth( request );
+    console.log('Extracted userId:', userId);
+    if (!userId) {
+      console.log('No userId found. Returning unauthorized.');
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
+
+
 
     const body = await request.json();
     console.log('Recieved request body:', body );
@@ -48,6 +58,3 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: 'Internal server error', error: String(error) }, { status: 500 });
   }
 }
-//   }
-//   return NextResponse.json({ message: 'Issue submitted successfully' })
-// }
