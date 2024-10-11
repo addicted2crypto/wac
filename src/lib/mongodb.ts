@@ -6,7 +6,7 @@ if (!process.env.MONGODB_URI) {
 
 const uri: string = process.env.MONGODB_URI;
 const options: MongoClientOptions = {
- 
+
 };
 
 declare global {
