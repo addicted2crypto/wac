@@ -14,15 +14,15 @@ const submitIssue = async (textContent: string, files: File[]) => {
     formData.append('textContent', textContent);
     files.forEach((file) => formData.append('files', file));
 
-    const response = await axios.post('/api/submit-issue', 
-    { textContent, files: files.map(file => ({ name: file.name, type: file.type})) },
-    {
+    const response = await axios.post('/api/submit-issue', formData, {
+    // { textContent, files: files.map(file => ({ name: file.name, type: file.type})) },
+    // {
       headers: {
         'Content-Type' : 'application/json',
 
       },
-    }
-  );
+    // }
+  });
     console.log('API Response:', response.data);
     return response.data;
   } catch (error) {
@@ -61,8 +61,9 @@ if (!isSignedIn) {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
-      const result = await submitIssue(textContent, []);
+      const result = await submitIssue(textContent, [] );
       console.log('Submission result:', result);
+      
     } catch (error) {
       console.error('An error has occured:', error);
     }
