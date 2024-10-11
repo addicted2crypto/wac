@@ -37,6 +37,7 @@ export async function POST(request: NextRequest) {
     }
 
     const documentToInsert = {
+      userId,
       textContent,
       fileUrls,
       createdAt: new Date()
