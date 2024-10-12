@@ -43,7 +43,7 @@ export async function connectToDatabase(): Promise<{client: MongoClient; db: Db}
   // }
     const client = await clientPromise;
     console.log('Client connected successfully');
-    const db = client.db('Imcounsulting');
+    const db = client.db('Appliance_Consult');
     console.log('Database selected: ImCounsulting');
     return { client, db};
 }

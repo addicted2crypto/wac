@@ -96,7 +96,7 @@ if (!isSignedIn) {
 
 
     if(!response.ok) {
-      throw new Error(`Http error! status: ${response.status}`)
+      throw new Error(`Http error! status no response dashboard: ${response.status}`)
     }
 
     const data = await response.json();
