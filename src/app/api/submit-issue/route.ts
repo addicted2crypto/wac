@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
 
     const { textContent, files } = body;
 
-    const issues = db.collection('ApplianceDocs');
+    const issues = db.collection('ImCounsulting');
     console.log('Accessing collection: ApplianceDocs');
 
     let fileUrls: string[] = [];

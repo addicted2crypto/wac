@@ -57,7 +57,7 @@ export  async function handler(req: NextApiRequest, res: NextApiResponse) {
     //   await client.connect();
     // }
 
-    const issues = db.collection('ApplianceDocs');  /* db name */
+    const issues = db.collection('ImCounsulting');  /* db name */
 
 
     let fileUrls: string[] = [];
