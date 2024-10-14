@@ -1,16 +1,16 @@
 import { MongoClient, MongoClientOptions, Db } from 'mongodb';
-import { Yeseva_One } from 'next/font/google';
-import { useServerInsertedHTML } from 'next/navigation';
-import { userAgent } from 'next/server';
+
+
+
 
 if (!process.env.MONGODB_URI) {
   throw new Error('Please add your Mongo URI to .env.local');
 }
 
 const uri: string = process.env.MONGODB_URI;
-// const options: MongoClientOptions = {
+const options: MongoClientOptions = {
 
-// };
+};
 
 declare global {
   var _mongoClientPromise: Promise<MongoClient> | undefined;
