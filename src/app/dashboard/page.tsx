@@ -139,7 +139,7 @@ return (
             rows={8}
           />
 
-
+        <div>
           <UploadButton<OurFileRouter, "imageUploader">
             endpoint='imageUploader'
             
@@ -166,7 +166,7 @@ return (
             }}
 
 
-          />
+          /></div>
           {uploadedFiles.length > 0 && (
             <div className='mt-4'>
               <p>Uploaded files:</p>
