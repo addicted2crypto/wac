@@ -77,7 +77,7 @@ if (!isSignedIn) {
 
  
   try {
-    const response = await fetch('/api/submit-issue', {
+    const response = await fetch('/api/submit-issue/route.ts', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
