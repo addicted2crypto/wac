@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
 
 
     const body = await request.json();
-    console.log('Recieved request body:', body );
+    console.log('Recieved request body from route.ts:', body );
 
     const { textContent, files } = body;
 
