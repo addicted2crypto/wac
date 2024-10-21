@@ -31,19 +31,26 @@ function Dashboard() {
   const handleIssueSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!textContent || !uploadedFiles) return;
-
-    try {
-      const response = await axios.post('/api/submit-issue', {
-        textContent,
-        uploadedFiles: Array.from(uploadedFiles).map((file) => file.name),
-      });
-      console.log(response.data);
-      alert('Issue submitted successfully!!');
-    } catch (error) {
-      console.error(error);
-      alert('Error submitting issue');
+    if (!textContent || uploadedFiles?.length === 0 ) {
+      alert('Please upload at least one file');
+      return;
     }
+    
+    setIsSubmitting(true);
+    setSubmitStatus('');
+    
+
+    // try {
+    //   const response = await axios.post('/api/submit-issue', {
+    //     textContent,
+    //     uploadedFiles: Array.from(uploadedFiles).map((file) => file.name),
+    //   });
+    //   console.log(response.data);
+    //   alert('Issue submitted successfully!!');
+    // } catch (error) {
+    //   console.error(error);
+    //   alert('Error submitting issue');
+    // }
 
    
 
@@ -57,9 +64,36 @@ function Dashboard() {
     // }
 
     // const submitIssue = async ({textContent, files} : TextContent) => {
-    //   try {
-    //     const formData = new FormData();
-    //     formData.append('textContent', textContent);
+      try {
+        const formData = new FormData();
+        formData.append('textContent', textContent);
+
+       if (uploadedFiles) {
+        const uploadedFilesArray = Array.from(uploadedFiles);
+        for(const file of uploadedFilesArray){
+          formData.append('files[]', file);
+        }
+       }
+
+       const response = await fetch('/api/upload-issue-with-files',
+       {
+        method: 'POST',
+        body: formData,
+       });
+       if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+        const data = await response.json();
+        console.log('Issue uploaded successfully', data);
+        setSubmitStatus('Issue uploaded successfully!');
+        } catch (error) {
+          console.error('Error uploading issue:', error);
+          setSubmitStatus(`An error occurred while uploading, the logged issue is: ${error}` );
+
+        } finally {
+          setIsSubmitting(false);
+        }
+      
     //     if (files.length > 0) {
     //     await Promise.all(files.map(async (file) => {
     //       const uploadData = await ourFileRouter.signImage(file)
@@ -150,12 +184,12 @@ function Dashboard() {
     //       return;
     //     }
 
-    setIsSubmitting(true);
-    setSubmitStatus('');
+    // setIsSubmitting(true);
+    // setSubmitStatus('');
 
 
     try {
-      const response = await fetch('/api/submit-issue/route.ts', {
+      const response = await fetch('/api/submit-issue', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -218,7 +252,7 @@ function Dashboard() {
                 rows={8}
               />
               <input type='file' multiple onChange={(e) => setUploadedFiles(e.target.files)} />
-              <Button type='submit'>Submit Issues</Button>
+              <Button type='submit' >Submit Issues</Button>
             </form>
 
             

@@ -44,15 +44,32 @@ export async function connectToDatabase(): Promise<{client: MongoClient; db: Db 
   // if (!clientPromise) {
   //   throw new Error('MongoDB client promise is not initialized');
   // }
+  try {
     const client = await clientPromise;
     console.log('Client connected successfully');
-    const db = client.db('Appliance_Consult');
-    console.log('Database selected: Appliance_Consult');
+
+    if(!client) {
+      throw new Error('Failed to connect to MongDB client in mongodb.ts')
+
+    }
+    const dbName = 'Appliance_Counsult';
+    const db = client.db(dbName);
+
+    if(!db) {
+      throw new Error(`Failed to select database ${dbName}`);
+    }
+
+    console.log(`Database selected: ${dbName}`);
     // return { client, db }
-    return { client, db }
+    return { client, db };
+
+} catch (error: any) {
+  console.error('Error connecting to MongoDB:', error.message);
+  throw error;
+}
 }
 
-export default clientPromise;
+// export default clientPromise;
 //   const client = new MongoClient(uri, {
 //     serverApi: {
 //       version: ServerApiVersion.v1,
