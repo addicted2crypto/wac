@@ -2,12 +2,13 @@
 import { connectToDatabase } from '@/lib/mongodb';
 import { getAuth } from '@clerk/nextjs/server';
 import { NextRequest, NextResponse } from 'next/server';
-import { ourFileRouter } from '../core';
+// import { ourFileRouter } from '../core';
  
 export async function POST(request: NextRequest) {
   console.log('API route /api/submit-issue hit:', new Date().toISOString());
   // router: connectToDatabase
   // router: ourFileRouter
+  router: connectToDatabase
   //post to AI agent with n8n workflow
   try {
     const {db} = await connectToDatabase();
