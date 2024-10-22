@@ -204,7 +204,7 @@ function Dashboard() {
           textContent: textContent,
           files: uploadedFiles,
           fileUrls: uploadedFiles,
-          userId: userInfo,
+          // userId: userInfo,
 
         }),
       });
