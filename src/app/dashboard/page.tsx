@@ -236,22 +236,22 @@ function Dashboard() {
 
     <div className='min-h-screen bg-[#fff]'>
       <SignedIn>
-        <div className='max-w-4xl mx-auto '>
-          <div className='flex justify-between items-center mb-8'>
-            <h1 className='pt-6 text-2xl text-sky-950 absolute left-[3rem] overflow-auto'>Welcome to your appliance solutions page!</h1>
+        <div className='max-w-4xl mx-auto overflow-auto'>
+          <div className='flex items-center justify-start md:text-center md:justify-center mb-8'>
+            <h1 className='pt-6 text-2xl text-sky-950 absolute left-[3rem] overflow-auto text-center p-[.5rem]'>Welcome to your appliance solutions page!</h1>
 
           </div>
-          <div className='absolute top-6 right-6'>
+          <div className='absolute md:top-6 md:right-6'>
             <SignOutButton />
           </div>
-          <div className='bg-[#969595] p-6 rounded-lg shadow-md'>
-            <h2 className='bg-gray-200 p-6 rounded-lg shadow-sm'>Submit Appliance Issues</h2>
+          <div className='bg-[#ecf6fa] p-3 rounded-lg shadow-md'>
+            <h2 className='bg-[#d7dcf0cc] p-4 rounded-lg shadow-sm text-center'>Submit appliance issues/error's in text field</h2>
             <form id='issue-form' onSubmit={handleIssueSubmit}>
               <textarea
                 value={textContent}
                 onChange={(e) => setTextContent(e.target.value)}
-                placeholder='Describe your appliance errors and problems here...'
-                className='w-full p-2 border border-gray-300 rounded-md'
+                placeholder='Describe your appliance errors and problems here adding model and serial numbers helps us diagnose more effectively. Any information about what the machine is doing you feel we should know also can be uploaded here'
+                className='w-full p-2 border border-gray-300 rounded-md text-lg text-pretty'
                 rows={8}
               />
               <input type='file' multiple onChange={(e) => setUploadedFiles(e.target.files)} />
