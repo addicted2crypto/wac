@@ -31,7 +31,7 @@ if(process.env.NODE_ENV === 'development') {
   }
   clientPromise = global._mongoClientPromise;
   
-  
+  //@add dont forget to change to prod before pushing live!
 } else {
   console.log('Creating new MongoDB client (Production mode)');
   client = new MongoClient(uri);
