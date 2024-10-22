@@ -6,6 +6,9 @@ import { SignIn, SignedIn, SignedOut, SignOutButton } from '@clerk/nextjs';
 import React, { useState } from 'react';
 // import { ourFileRouter, OurFileRouter } from '../api/core';
 import axios from 'axios';
+import { useServerInsertedHTML } from 'next/navigation';
+import { User } from '@clerk/nextjs/dist/api';
+import { userInfo } from 'os';
 // import { User } from '@clerk/nextjs/dist/api';
 // import { ourFileRouter } from '../api/core';
 
@@ -201,7 +204,7 @@ function Dashboard() {
           textContent: textContent,
           files: uploadedFiles,
           fileUrls: uploadedFiles,
-          // userId: 
+          userId: userInfo,
 
         }),
       });
