@@ -1,11 +1,10 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
+// api/upload-issue-with-files.ts
 
+import { NextApiRequest, NextApiResponse } from 'next';
+import { MongoClient } from 'mongodb';
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+const url = process.env.MONGODB_URI;
+const dbName = process.env.DB_NAME;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -13,25 +12,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const form = new formidable.IncomingForm();
-    form.uploadDir = './uploads';
-    form.keepExtensions = true;
+    const client = new MongoClient(url);
+    await client.connect();
+    
+    const db = client.db(dbName);
+    const issuesCollection = db.collection('issues');
 
-    await new Promise((resolve, reject) => {
-      form.parse(req, (err: string, fields: string, files: File[]) => {
-        if (err) return reject(err);
-        resolve({ fields, files });
-      });
+    // Get request body
+    const { textContent, files } = req.body;
+
+    // Process and save the issue to MongoDB
+    const result = await issuesCollection.insertOne({
+      textContent,
+      files: files ? files.map((file) => file.filename) : [],
     });
 
-    const { textContent } = req.body;
-    const fileNames = Object.keys(req.files).map(key => req.files[key].newFilename);
-
-    // Process the submission here
-    console.log('Received submission:', textContent, fileNames);
-
-    return res.status(201).json({ message: 'Issue submitted successfully' });
+    res.status(201).json({ message: 'Issue uploaded successfully', id: result.insertedId });
   } catch (error) {
-    return res.status(500).json({ message: 'Internal Server Error', error });
+    console.error('Error uploading issue:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 }
