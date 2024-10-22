@@ -52,7 +52,7 @@ export async function connectToDatabase(): Promise<{client: MongoClient; db: Db 
       throw new Error('Failed to connect to MongDB client in mongodb.ts')
 
     }
-    const dbName = 'Appliance_Counsult';
+    const dbName = 'ImCounsulting';
     const db = client.db(dbName);
 
     if(!db) {
