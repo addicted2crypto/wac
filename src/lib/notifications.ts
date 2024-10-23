@@ -3,7 +3,7 @@ import { Resend } from 'resend';
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function sendCustomerNotification(userId: string, message: string) {
-  // TODO: Retrieve user's email from your database or Clerk
+  // TODO: Retrieve user's email from your database stored in mongoDB!
   const userEmail = 'customer@example.com';
 
   try {

@@ -1,21 +1,9 @@
 "use client"
 import { Button } from '@/components/ui/button';
-import { SignIn, SignedIn, SignedOut, SignOutButton } from '@clerk/nextjs';
-// import { useUser } from '@clerk/nextjs';
-// import { UploadButton } from "@uploadthing/react";
+import {  SignedIn, SignedOut, SignOutButton } from '@clerk/nextjs';
 import React, { useState } from 'react';
-// import { ourFileRouter, OurFileRouter } from '../api/core';
-import axios from 'axios';
-import { useServerInsertedHTML } from 'next/navigation';
-import { User } from '@clerk/nextjs/dist/api';
-import { userInfo } from 'os';
-// import { User } from '@clerk/nextjs/dist/api';
-// import { ourFileRouter } from '../api/core';
 
-// const OurFileRouter = require('../api/core');
-// interface ClientUploadedFileData {
-//   name: string;
-// }
+
 function Dashboard() {
   const [textContent, setTextContent] = useState('');
   const [uploadedFiles, setUploadedFiles] = useState<FileList | null>(null);
@@ -43,30 +31,7 @@ function Dashboard() {
     setSubmitStatus('');
     
 
-    // try {
-    //   const response = await axios.post('/api/submit-issue', {
-    //     textContent,
-    //     uploadedFiles: Array.from(uploadedFiles).map((file) => file.name),
-    //   });
-    //   console.log(response.data);
-    //   alert('Issue submitted successfully!!');
-    // } catch (error) {
-    //   console.error(error);
-    //   alert('Error submitting issue');
-    // }
-
-   
-
-    // interface SubmissionResult {
-    //   data: ClientUploadedFileData[];
-    // }
-
-    // interface TextContent {
-    //   textContent: string;
-    //   files: ClientUploadedFileData[];
-    // }
-
-    // const submitIssue = async ({textContent, files} : TextContent) => {
+    
       try {
         const formData = new FormData();
         formData.append('textContent', textContent);
@@ -97,100 +62,13 @@ function Dashboard() {
           setIsSubmitting(false);
         }
       
-    //     if (files.length > 0) {
-    //     await Promise.all(files.map(async (file) => {
-    //       const uploadData = await ourFileRouter.signImage(file)
-    //     }
-    //     return await axios.post('/api/submit-issue', formData) 
-    //     } catch (error) {
-    //       console.error('Error submitting issue from dashboard:', error);
-    //       throw error;
-    //     }
-    //   };
-
-    //   const handleUploadError = (error: Error) => {
-    //     console.log('Error:', error);
-    //     alert(`Error from dashboard: ${error.message}`);
-    //   };
-    //   };
-    //       headers: {
-    //         'Content-Type' : 'application/json',
-
-    //       },
-    //     // }
-    //   });
-    //     console.log('API Response:', response.data);
-    //     return response.data;
-    //   } catch (error) {
-    //     console.error('Error submitting issue:', error);
-    //     throw error;
-    //   }
-    // };
+    
 
 
 
 
 
-    // export default function Dashboard() {
-    //   const { user, isLoaded, isSignedIn } = useUser();
-    //   const [uploadedFiles, setUploadedFiles] = useState<ClientUploadedFileData<null>[]>([]);
-    //   const [textContent, setTextContent] = useState('');
-    //   const [isSubmitting, setIsSubmitting] = useState(false);
-    //   const [submitStatus, setSubmitStatus] = useState('');
-
-
-    // if(!isLoaded){
-    //   return <div>Loading...</div>
-    // }
-
-    // if (!isSignedIn) {
-    //   return (
-    //     <div className='text-sm'>
-    //       <h1>Please sign in to access the dashboard</h1>
-    //       <SignIn />
-    //     </div>
-    //   )
-    // }
-
-   
-
-    //   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    //     event.preventDefault();
-    //     setIsSubmitting(true);
-    //     try {
-    //       if(!textContent.trim()){
-    //         throw new Error('Please enter some text content');
-    //       }
-    //       const file: ClientUploadedFileData[] = await Promise.all(uploadedFiles.map((file) =>
-    //       ourFileRouter
-    //       ))
-
-    //       const result = await submitIssue(textContent, [] );
-    //       console.log('Submission result:', result);
-    //       return;
-
-    //     } catch (error) {
-    //       console.error('An error has occured:', error);
-    //     }
-
-    //     try {
-    //       const response = await fetch('/api/submit-issue', {
-    //         method: 'Post',
-    //         body: new FormData({
-    //           textContent,
-    //           files: uploadedFiles.map((file) => file.name),
-    //         }),
-    //       })
-    //     }
-    //     if(!isLoaded || !user){
-    //       setSubmitStatus('User not loaded. Please try again.')
-    //       return;
-    //     }
-
-    // setIsSubmitting(true);
-    // setSubmitStatus('');
-
-
+    
     try {
       const response = await fetch('/api/submit-issue', {
         method: 'POST',

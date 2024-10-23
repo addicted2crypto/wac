@@ -4,19 +4,7 @@ import { getAuth } from '@clerk/nextjs/server';
 import { connectToDatabase } from '@/lib/mongodb';
 
 
-// const uri = process.env.MONGODB_URI;
-// const utapi = new UTApi();
-
-// if(!uri){
-//   throw new Error( 'Please add your MongoDB uri to .env.local');
-// }
-
-
-// const client = new MongoClient(uri);
-
-// if(!client) {
-//   client = new MongoClient(uri);
-// }
+//bringing in mongo connection from connectToDatabase! winning
 
 interface SubmitIssueRequestBody {
   textContent: string;

@@ -69,15 +69,3 @@ export async function connectToDatabase(): Promise<{client: MongoClient; db: Db 
 }
 }
 
-// export default clientPromise;
-//   const client = new MongoClient(uri, {
-//     serverApi: {
-//       version: ServerApiVersion.v1,
-//       strict: true,
-//       deprecationErrors: true,
-//     }
-//   });
-//   const db = client.db('Appliance_Consult').command({ ping: 1});
-//   console.log('I pinged you for deployment. You have successfully connected to MongoDB finally!')
-//   return { client, db };
-// }

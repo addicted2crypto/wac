@@ -1,5 +1,3 @@
-import { createUploadthing, type FileRouter } from "uploadthing/next";
-import { UploadThingError } from 'uploadthing/server';
 import { MongoClient } from 'mongodb';
 import { NextApiRequest, NextApiResponse } from 'next';
 
@@ -36,27 +34,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 }
   export default handler;
-// }
-// const imageRouter = createUploadthing();
-                                                                                   
 
-// const textFileRouter = createUploadthing();
-
-// export const ourFileRouter: FileRouter<Json> = {
-//   imageUploader: imageRouter({
-//     image: {maxFileSize: '4MB'},
-//   })
-//   .onUploadComplete(async (options: string) => {
-//     console.log('Image upload complete for userId', options.metadata)
-//   }),
   
    
    
-//     textUploader: createUploadthing({
-//       accept: '.txt, .docx, .pdf',
-//       file: {maxFileSize: '4MB'}
-     
-//     })
-// } 
- 
-// export type OurFileRouter = typeof ourFileRouter;
