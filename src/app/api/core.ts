@@ -6,7 +6,7 @@ const DB_NAME = 'ImCounsulting';
 const ISSUES_COLLECTION = 'issues';
 
 interface imageUploaderOptions{
-  maxFileSize?: string;
+  maxFileSize?: number;
 }
 
 
