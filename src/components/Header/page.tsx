@@ -1,8 +1,9 @@
-import { SignIn, SignUp, useAuth } from '@clerk/nextjs';
-import {  clerkClient } from '@clerk/nextjs/server';
+"use client"
+// import { SignIn, SignUp, useAuth } from '@clerk/nextjs';
+// import {  clerkClient } from '@clerk/nextjs/server';
 
 import Link from 'next/link';
-import React from 'react';
+import React, { useState } from 'react';
 import WidthWrapper from '../ui/Widthwrapper';
 
 
@@ -11,9 +12,9 @@ import WidthWrapper from '../ui/Widthwrapper';
 const Navbar = ()  => {
   // const {isLoaded, userId, sessionId, getToken } = useAuth();
   // console.log(userId, sessionId, getToken, isLoaded);
-  const  userId  = '';
-  const User =  clerkClient.users.getUser(userId);
-
+//   const  userId  = '';
+//   const User =  clerkClient.users.getUser(userId);
+    const [userId, setUserId] = useState('')
     if(!userId){
         <div>Please sign in...</div>
     }
