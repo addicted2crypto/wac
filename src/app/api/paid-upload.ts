@@ -6,7 +6,7 @@ import { sendCustomerNotification } from '@/lib/notifications';
 
 // import { sendCustomerNotification, sendAdminNotification } from '../../lib/notifications';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handlerPaid(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method not allowed' });
   }
