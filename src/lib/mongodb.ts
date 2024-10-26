@@ -1,4 +1,4 @@
-import { MongoClient, MongoClientOptions, Db } from 'mongodb';
+import { MongoClient, MongoClientOptions, Db, GridFSBucket } from 'mongodb';
 
 
 
