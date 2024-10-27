@@ -43,7 +43,7 @@ function Dashboard() {
         }
        }
 
-       const response = await fetch('/api/upload-issue-with-files',
+       const response = await fetch('/api/submit-file-issue',
        {
         method: 'POST',
         body: formData,
