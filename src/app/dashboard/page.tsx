@@ -14,6 +14,7 @@ function Dashboard() {
     e.preventDefault();
     const issueForm = document.getElementById('issue-form');
     if (issueForm) {
+      //add map submissions
       issueForm.dispatchEvent(new Event('submit', { bubbles: true }));
     }
 
@@ -43,7 +44,7 @@ function Dashboard() {
         }
        }
 
-       const response = await fetch('/api/submit-file-issue',
+       const response = await fetch('/api/submit-issue-with-file',
        {
         method: 'POST',
         body: formData,
