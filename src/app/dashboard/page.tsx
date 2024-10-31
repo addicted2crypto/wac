@@ -112,7 +112,7 @@ function Dashboard() {
   
   }
   return (
-
+    
     <div className='min-h-screen bg-[#fff]'>
       <SignedIn>
         <div className='max-w-4xl mx-auto overflow-auto'>
@@ -151,10 +151,13 @@ function Dashboard() {
         </div>
         <div className='mt-8 text-center text-[#101010]'>
           <p className=' font-serif text-3xl'>Over 100 years of appliance repair experience at your finger tips</p>
-
+        
         </div>
       </SignedIn>
+      
+      <div className='flex justify-center hidden:overflow h-4'>Please sign in with clerk to view dashboard</div>
     </div>
+    
   );
 
         }

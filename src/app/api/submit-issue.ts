@@ -25,7 +25,12 @@ export  async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 
   try {
-    
+    // const result = await issues.insertOne({
+    //   userId,
+    //   textContent,
+    //   fileUrls,
+    //   createdAt: new Date();
+    // })
     const {db} = await connectToDatabase();
     // const { db } = await connectToDatabase();
     console.log('Connected to MongoDB');
