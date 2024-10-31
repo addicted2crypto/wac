@@ -117,7 +117,7 @@ function Dashboard() {
       <SignedIn>
         <div className='max-w-4xl mx-auto overflow-auto'>
           <div className='flex items-center justify-start md:text-center md:justify-center mb-8'>
-            <h1 className='pt-6 text-2xl text-sky-950 absolute left-[3rem] overflow-auto text-center p-[.5rem]'>Welcome to your appliance solutions page!</h1>
+            <h1 className='pt-6 text-2xl text-sky-950  overflow-auto text-center p-[.5rem]'>Welcome to your appliance solutions page!</h1>
 
           </div>
           <div className='absolute md:top-6 md:right-6'>
