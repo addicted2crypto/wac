@@ -142,7 +142,7 @@ function Dashboard() {
             <Button variant='outline'
               onClick={handleSubmitButtonClick}
               disabled={isSubmitting}
-            >{isSubmitting ? 'Submitting..' : 'Submit Files'}
+            >{isSubmitting ? 'Submitting..' : 'Submit Files/Submit videos'}
 
             </Button>
             {submitStatus && <p className='mt-2 text-sm'>{submitStatus}</p>}
