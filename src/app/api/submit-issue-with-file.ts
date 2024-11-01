@@ -4,7 +4,13 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { MongoClient } from 'mongodb';
 
 
-const url = process.env.MONGODB_URI;
+if (!process.env.MONGODB_URI) {
+  throw new Error('Please add your Mongo URI to .env.local');
+}
+
+
+const url: string = process.env.MONGODB_URI;
+
 const dbName = process.env.DB_NAME;
 
 
@@ -38,7 +44,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Process and save the issue to MongoDB
     const result = await issuesCollection.insertOne({
       textContent,
-      files: files ? files.map((file) => file.filename) : [],
+      files: files ? files.map((file: string) => file.length) : [],
     });
 
     res.status(201).json({ message: 'Issue uploaded successfully', id: result.insertedId });
