@@ -47,7 +47,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       files: files ? files.map((file: string) => file.length) : [],
     });
 
-    res.status(201).json({ message: 'Issue uploaded successfully', id: result.insertedId });
+    res.status(201).json({ message: 'Text/Issue uploaded successfully', id: result.insertedId });
   } catch (error) {
     console.error('Error uploading issue:', error);
     res.status(500).json({ message: 'Internal Server Error' });
