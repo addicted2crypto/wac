@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
   console.log('API route /api/submit-issue hit:', new Date().toISOString());
   // router: connectToDatabase
   // router: ourFileRouter
-  router: connectToDatabase
+  // router: connectToDatabase
   //post to AI agent with n8n workflow
   try {
     const {db} = await connectToDatabase();

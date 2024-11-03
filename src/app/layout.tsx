@@ -31,11 +31,11 @@ export default function RootLayout({
             <SignInButton />
           </SignedOut>
           <SignedIn>
-
+          <Dashboard />
             <UserButton afterSignOutUrl='/'/>
           </SignedIn>
           <header>
-            <Dashboard />
+           
 
             <Header />
 
