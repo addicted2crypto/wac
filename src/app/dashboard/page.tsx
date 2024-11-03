@@ -1,7 +1,10 @@
 "use client"
 import { Button } from '@/components/ui/button';
 import {  SignedIn, SignedOut, SignOutButton } from '@clerk/nextjs';
+import { UploadButton } from '@uploadthing/react';
+
 import React, { useState } from 'react';
+import { OurFileRouter } from '../api/uploadthing';
 
 
 function Dashboard() {
@@ -138,13 +141,24 @@ function Dashboard() {
             </form>
 
             
-            
+            <UploadButton<OurFileRouter, "imageUploader">
+              endpoint='imageUploader'
+              // onUploadComplete={(res: string) => {
+              //   console.log('Files:', res);
+              //   // setUploadedFiles();
+              //   alert('uploaded file or video')
+              // }}
+              onUploadError={(error: Error) => {
+                alert(`Error ${error.message}`);
+              }}
+              />
             <Button variant='outline'
               onClick={handleSubmitButtonClick}
               disabled={isSubmitting}
             >{isSubmitting ? 'Submitting..' : 'Submit Files/Submit videos'}
 
             </Button>
+            
             {submitStatus && <p className='mt-2 text-sm'>{submitStatus}</p>}
           </div>
 

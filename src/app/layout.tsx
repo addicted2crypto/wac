@@ -32,7 +32,8 @@ export default function RootLayout({
           </SignedOut>
           <SignedIn>
           <Dashboard />
-            <UserButton afterSignOutUrl='/'/>
+          
+            <UserButton />
           </SignedIn>
           <header>
            

@@ -13,6 +13,7 @@ interface SubmitIssueRequestBody {
     type: string;
     size: number;
     url: string;
+   
   }[]; 
 }
 
@@ -65,7 +66,9 @@ export  async function handler(req: NextApiRequest, res: NextApiResponse) {
           userId,
           textContent,
           fileUrls,
-          createdAt: new Date()
+          createdAt: new Date(),
+          
+
         });
 
         console.log('Saved to MongoDb', result.insertedId);
