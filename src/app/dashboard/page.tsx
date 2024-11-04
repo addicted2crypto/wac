@@ -29,11 +29,13 @@ function Dashboard() {
       //text content from textarea
     const textContent = (e.target as HTMLFormElement).querySelector('textarea')?.value;
     // creating a new FormData obj
-    const formData = new FormData(e.target as HTMLFormElement) 
-    //Add teh text content to the form data if applicable?
-    if(textContent) {
-      formData.append('textContent', textContent);
-    }
+
+    const filesInput = (e.target as HTMLFormElement).querySelector<HTMLInputElement>('input[name="files"]');
+    // const formData = new FormData(e.target as HTMLFormElement) 
+    const uploadedFiles = filesInput ? filesInput.files : null;
+    // if(textContent) {
+    //   formData.append('textContent', textContent);
+    // }
 
     if (!textContent || !uploadedFiles ) {
       alert('Please upload at least one file');
@@ -56,11 +58,30 @@ function Dashboard() {
       //   }
       //  }
         try {
+          let fileUrls: string[] = [];
+          if(uploadedFiles){
+            const uploadResponse = await uploadFiles(uploadedFiles);
+            fileUrls = uploadResponse.fileUrls;
+          }
+          const data = {
+            textContent,
+            fileUrls: uploadedFiles ? fileUrls : [];
+          }
+
            const response = await fetch('/api/submit-issue-with-file',
        {
         method: 'POST',
-        body: formData,
+        headers: {'Content-Type' : 'application/json'},
+        body: JSON.stringify(data),
        });
+
+       if(response.ok){
+        alert('Issue submitted successfully finally!');
+        setTextContent('');
+        filesInput && (filesInput.value = '');
+       } else {
+        alert('Error submitting issue on dashboard...')
+       }
 
        if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
