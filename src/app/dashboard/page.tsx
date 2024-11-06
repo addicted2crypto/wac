@@ -4,7 +4,7 @@ import {  SignedIn, SignOutButton } from '@clerk/nextjs';
 import { UploadButton } from '@uploadthing/react';
 
 import React, { useState } from 'react';
-import { text } from 'stream/consumers';
+
 import { OurFileRouter } from '../api/uploadthing';
 
 
@@ -13,6 +13,8 @@ function Dashboard() {
   const [uploadedFiles, setUploadedFiles] = useState<FileList | null>(null);
   const [submitStatus, setSubmitStatus] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+ let uploadFiles: string;
 
   const handleSubmitButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     // e.preventDefault();
@@ -60,12 +62,12 @@ function Dashboard() {
         try {
           let fileUrls: string[] = [];
           if(uploadedFiles){
-            const uploadResponse = await uploadFiles(uploadedFiles);
-            fileUrls = uploadResponse.fileUrls;
+            // const uploadResponse = await uploadFiles(uploadedFiles);
+            fileUrls = [];
           }
           const data = {
             textContent,
-            fileUrls: uploadedFiles ? fileUrls : [];
+            fileUrls: uploadedFiles ? fileUrls : [],
           }
 
            const response = await fetch('/api/submit-issue-with-file',
@@ -190,7 +192,7 @@ function Dashboard() {
                 
                 alert('uploaded file or video')
               }} */}
-              {/* // onUploadError={(error: Error) => { */}
+              {/* // onUploadError={(error: Error) => {
                  {/* alert(`Error ${error.message}`);
                }} */}
               
