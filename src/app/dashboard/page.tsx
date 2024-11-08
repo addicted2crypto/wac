@@ -5,7 +5,6 @@ import { UploadButton } from '@uploadthing/react';
 
 import React, { useState } from 'react';
 
-import { OurFileRouter } from '../api/uploadthing';
 
 
 function Dashboard() {
@@ -14,17 +13,29 @@ function Dashboard() {
   const [submitStatus, setSubmitStatus] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
- let uploadFiles: string;
 
-  const handleSubmitButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    // e.preventDefault();
-    const issueForm = document.getElementById('issue-form');
-    if (issueForm) {
-      //add map submissions
-      issueForm.dispatchEvent(new Event('submit', { bubbles: true }));
-    }
 
+ class SubmissionError extends Error {
+  status: boolean;
+  constructor(message: string, status: boolean) {
+    
+    super(message);
+    this.status = status;
+    Object.setPrototypeOf(this, SubmissionError.prototype)
+    this.name = 'SubmissionError';
+   
   }
+}
+
+  // const handleSubmitButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+  //   // e.preventDefault();
+  //   const issueForm = document.getElementById('issue-form');
+  //   if (issueForm) {
+  //     //add map submissions
+  //     issueForm.dispatchEvent(new Event('submit', { bubbles: true }));
+  //   }
+
+  // }
 
   const handleIssueSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -38,31 +49,48 @@ function Dashboard() {
     // if(textContent) {
     //   formData.append('textContent', textContent);
     // }
+    const formData = new FormData(e.target as HTMLFormElement);
+
+    const data = {
+      userId: formData.get('userID'),
+      textContent: formData.get('textContent'),
+      issue: formData.get('issue'),
+    }
 
     if (!textContent || !uploadedFiles ) {
       alert('Please upload at least one file');
       return;
     }
-    
-    // setIsSubmitting(true);
-    // setSubmitStatus('');
-    
+    try{
+      const response = await fetch('/api/submit-issue-with-file', {
+        method: 'POST',
+        headers: {'Content-Type' : 'application/json'},
+        body: JSON.stringify(data),
+      });
 
-    
-      // try {
-      //   const formData = new FormData();
-      //   formData.append('textContent', textContent);
+      if(!response.ok) {
+        throw new SubmissionError(`Http error! status: ${response.status}`, status);
+      }
+    } catch (error) {
+      console.error('Error uploading issue:', error);
+      setSubmitStatus(`An error occurred while uploading, the logged issue is: ${error}` );
 
-      //  if (uploadedFiles) {
-      //   // const uploadedFilesArray = Array.from(uploadedFiles);
-      //   for(const file of uploadedFiles){
-      //     formData.append('files[]', file);
-      //   }
-      //  }
+    }
+    async function uploadFiles(files: File[]): Promise<{ url?: string}[]> {
+      const promises = files.map(async (file): Promise<{url: string}> => {
+        try {
+        return {url: `/api/files/${file.name}`};
+        } catch (error) {
+          console.error('ERR uploading file: ', error);
+          return {url: null, error: 'Failed to upload dat file yo'};
+        }
+      });
+      return Promise.all(promises)
+    }
         try {
           let fileUrls: string[] = [];
           if(uploadedFiles){
-            // const uploadResponse = await uploadFiles(uploadedFiles);
+            const uploadResponse = await uploadFiles(uploadedFiles);
             fileUrls = [];
           }
           const data = {
