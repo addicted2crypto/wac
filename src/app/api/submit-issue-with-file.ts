@@ -5,6 +5,7 @@ import { Request, Response } from 'express';
 import multer from 'multer';
 import axios from 'axios';
 import { NextApiRequest } from 'next';
+import { prototype } from 'events';
 
 
 
@@ -22,22 +23,36 @@ const DB_NAME = 'ImCounsulting';
 
 interface IssueData {
   title: string;
-  description: string;t: any
+  description: string;
+  userId: string;
+  textContent: string;
+  fileUrls: FileList;
+  createdAt: number;
 }
 
 const issueData = {
-      userId: '',
-      textContent: '',
-      fileUrls: FileList || [],
-      createdAt: Date.now(),
-    //   userId: string;
-    // textContent: any;
-    // fileUrls: { new (): FileList; prototype: FileList; };
-    // createdAt: Number;
+      // userId: '',
+      // textContent: '',
+      // fileUrls: FileList || [],
+      // createdAt: Date.now(),
+    title: '',
+    description: '',
+    
+};
+
+//add this fileList block was an attempt to fix the insert id and connect to mongoDB errors, 
+const fileList = new FileList()
+const newIssue = {
+  title: 'New Issue title',
+  description: 'Details of the issue',
+  userId: 'Logged user Id',
+  textContent: 'Field for uploaded text from clients',
+  fileUrls: fileList,
+  createdAt: new Date().getTime()
 };
 
 try {
-  const insertedId = await saveIssueToMongoDB(issueData);
+  const insertedId = await saveIssueToMongoDB(newIssue);
   console.log(`Issue saved successfully. ID: ${insertedId}`);
 } catch (error: any) {
   console.error(error.message);
@@ -68,6 +83,7 @@ export default async function handler(req:NextApiRequest & CustomNextApiRequest,
   try {
     const { textContent } = req.body;
     const files = FileList;
+  
 
     // // Upload files to UploadThings
     // if(files && Object.keys(files).length > 0){
@@ -91,7 +107,7 @@ export default async function handler(req:NextApiRequest & CustomNextApiRequest,
     };
 
     // Connect to MongoDB and save the document
-    const result = await saveIssueToMongoDB(issueData);
+    const result = await saveIssueToMongoDB(newIssue);
   
 
     res.status(201).json({ message: 'Text/Issue uploaded successfully', description: 'This is a test doc' });
@@ -159,16 +175,11 @@ async function uploadFilesToUploadThings(file: File): Promise<string> {
 }
 
 
-async function saveIssueToMongoDB(issue: {
+async function saveIssueToMongoDB(issue: IssueData) {
   
-    title: string;
-    description: string;
-    // userId: string;
-    // textContent: any;
-    // fileUrls: { new (): FileList; prototype: FileList; };
-    // createdAt: Number;
+   console.log('IssueData called');
   
-  })
+  
  {
   let client;
   try {
@@ -186,6 +197,6 @@ async function saveIssueToMongoDB(issue: {
       await closeMongoDBClient(client);
     }
   };
-  
+}
 }
 

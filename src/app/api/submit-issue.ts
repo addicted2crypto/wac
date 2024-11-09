@@ -4,6 +4,7 @@ import { getAuth } from '@clerk/nextjs/server';
 import { connectToDatabase } from '@/lib/mongodb';
 
 
+
 //bringing in mongo connection from connectToDatabase! winning
 
 interface SubmitIssueRequestBody {
@@ -17,6 +18,12 @@ interface SubmitIssueRequestBody {
   }[]; 
 }
 
+export const config = {
+  api: {
+    bodyParser: true,
+  },
+};
+
 export  async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
@@ -24,7 +31,7 @@ export  async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method not allowed' });
   }
-
+   
   try {
     // const result = await issues.insertOne({
     //   userId,
@@ -55,12 +62,12 @@ export  async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     let fileUrls: string[] = [];
 
-   
+   console.log('fileUrls: ',fileUrls)
 
     if (files && Array.isArray(files) && files.length > 0 ) {
       fileUrls = files.map(file => file.url).filter(Boolean) 
     }
-      
+      console.log('Grabbed file array submit-issue')
      
         const result = await issues.insertOne({
           userId,
@@ -68,7 +75,7 @@ export  async function handler(req: NextApiRequest, res: NextApiResponse) {
           fileUrls,
           createdAt: new Date(),
           
-
+            
         });
 
         console.log('Saved to MongoDb', result.insertedId);
