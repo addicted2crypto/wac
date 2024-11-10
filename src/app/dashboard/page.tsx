@@ -69,28 +69,29 @@ function Dashboard() {
       });
 
       if(!response.ok) {
-        throw new SubmissionError(`Http error! status: ${response.status}`, status);
+        throw new SubmissionError(`Http error! status: ${response.status}`, true);
       }
     } catch (error) {
       console.error('Error uploading issue:', error);
       setSubmitStatus(`An error occurred while uploading, the logged issue is: ${error}` );
 
     }
-    async function uploadFiles(files: File[]): Promise<{ url?: string}[]> {
+    async function uploadFiles(files: File[]): Promise<{ url?: string;}[]> {
       const promises = files.map(async (file): Promise<{url: string}> => {
         try {
         return {url: `/api/files/${file.name}`};
         } catch (error) {
           console.error('ERR uploading file: ', error);
-          return {url: null, error: 'Failed to upload dat file yo'};
+          return {url: 'string'};
         }
       });
       return Promise.all(promises)
     }
         try {
           let fileUrls: string[] = [];
+          
           if(uploadedFiles){
-            const uploadResponse = await uploadFiles(uploadedFiles);
+            const uploadResponse = await uploadFiles(files);
             fileUrls = [];
           }
           const data = {

@@ -1,15 +1,23 @@
 import { MongoClient, MongoClientOptions, Db, GridFSBucket } from 'mongodb';
 
 
-
+type UploadThingConfig = {
+  bucketName: string;
+  uri: string;
+}
 
 if (!process.env.MONGODB_URI) {
   throw new Error('Please add your Mongo URI to .env.local');
 }
 
-const uri: string = process.env.MONGODB_URI;
-const options: MongoClientOptions = {
+// const uri: string = process.env.MONGODB_URI;
+// const options: MongoClientOptions = {
 
+// };
+
+const uploadThingConfig: UploadThingConfig = {
+  bucketName: 'WAC',
+  uri: 'https://api.uploadthing.com/v1/upload',
 };
 
 declare global {
@@ -19,12 +27,22 @@ declare global {
 let client: MongoClient;
 let clientPromise: Promise<MongoClient>;
 
+const createClientOptions = () => {
+  const uploadthingToken = process.env.UPLOADTHING_TOKEN as string;
+  return {
+    auth: {
+      username: 'api',
+      password: uploadthingToken,
+    },
+  }
+};
 
 
 if(process.env.NODE_ENV === 'development') {
   if(!global._mongoClientPromise) {
     console.log('Creating new MongoDB client (DEV mode)');
-    client = new MongoClient(uri);
+    client = new MongoClient(uploadThingConfig.uri, createClientOptions());
+  
     global._mongoClientPromise = client.connect();
   } else {
     console.log('Reusing existing MongoDB client (DEV mode)');
@@ -34,7 +52,7 @@ if(process.env.NODE_ENV === 'development') {
   //@add dont forget to change to prod before pushing live!
 } else {
   console.log('Creating new MongoDB client (Production mode)');
-  client = new MongoClient(uri);
+  client = new MongoClient(uploadThingConfig.uri, createClientOptions());
   clientPromise = client.connect();
 }
 
