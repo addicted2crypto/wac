@@ -56,6 +56,17 @@ if(process.env.NODE_ENV === 'development') {
   clientPromise = client.connect();
 }
 
+export async function insertIssue(db: Db, issueData: any) {
+  const issues = db.collection('ImCounsulting');
+  try {
+    const result = await issues.insertOne(issueData);
+    console.log('Saved to MongoDB', result.insertedId);
+    return result;
+  } catch (error) {
+    console.error('Error inserting issue into MongoDB:');
+    throw error;
+  }
+}
 
 export async function connectToDatabase(): Promise<{client: MongoClient; db: Db }> {
   console.log('Connecting to database ...');
