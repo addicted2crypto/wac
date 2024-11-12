@@ -24,8 +24,10 @@ const handleFileUpload = async(files: File[]) => {
   } catch (error){
 
     console.error('File upload error:', error);
+    
     setSubmitStatus(`Error uploading files: ${SubmissionError}`);
   }
+
 }
 
  class SubmissionError extends Error {
@@ -54,7 +56,7 @@ const handleFileUpload = async(files: File[]) => {
     e.preventDefault();
       //text content from textarea
 
-     
+      setUploadedFiles(null);
     const textContent = (e.target as HTMLFormElement).querySelector('textarea')?.value;
     // creating a new FormData obj
     if(!textContent?.trim()) {
