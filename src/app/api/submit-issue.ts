@@ -18,6 +18,12 @@ interface NextApiRequestWithFile extends ExpressRequest {
   file?: any;
 }
 
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
 interface SubmitIssueRequestBody {
   textContent: string;
   // files?: {
