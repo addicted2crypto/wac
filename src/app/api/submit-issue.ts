@@ -101,8 +101,8 @@ export  async function handler(req: NextApiRequest, res: NextApiResponse) {
 
 async function insertIssue(db: Db, issueData: string) {
   try {
-    const result = await db.collection('ImCounsulting').insertOne(issueData);
-    return result.insertedId;
+    const result = await db.collection('ImCounsulting')
+    return result
   } catch (error) {
     console.error('Error inserting issue:', error.message);
     throw new Error('Failed to save issue to MongoDB');
