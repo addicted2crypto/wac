@@ -85,7 +85,7 @@ export  async function handler(req: NextApiRequest, res: NextApiResponse) {
       
       const issueData = {userId, textContent, fileUrls }; 
 
-        const result = await insertIssue(dbClient.db, issueData);
+        // const result = await insertIssue(dbClient.db, issueData);
 
         console.log('Saved to MongoDb', result.insertedId);
     
