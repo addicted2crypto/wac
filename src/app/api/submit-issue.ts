@@ -22,6 +22,7 @@ export const config = {
   api: {
     bodyParser: false,
   },
+  dest: '/uploads/',
 };
 
 interface SubmitIssueRequestBody {
