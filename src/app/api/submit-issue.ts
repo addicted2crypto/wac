@@ -27,26 +27,13 @@ export const config = {
 
 interface SubmitIssueRequestBody {
   textContent: string;
-  // files?: {
-  //   name: string;
-  //   type: string;
-  //   size: number;
-  //   url: string;
-   
-  // }[];  files are not in this file anymore
+
 }
 
-// export const config = {
-//   api: {
-//     bodyParser: false,
-//   },
-// };
 const dbClient = await connectToDatabase();
 
 export  async function handler(req: NextApiRequest, res: NextApiResponse) {
-  // res.setHeader('Access-Control-Allow-Origin', '*');
-  // res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  // res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method not allowed' });
   }
@@ -58,7 +45,7 @@ export  async function handler(req: NextApiRequest, res: NextApiResponse) {
       return res.status(401).json({ message: 'User is not authenticated' });
     }
 
-    upload.single('file')(req, res, (err) => {
+    upload.single('file')(req: any, res, (err) => {
       if(err){
         throw err;
       }

@@ -9,28 +9,10 @@ import multer from 'multer';
 
 
 const UPLOADTHING_TOKEN = process.env.UPLOADTHINGS_API_KEY;
-const dbName = process.env.DB_NAME;
+
 const MONGO_URI = process.env.MONGO_URI;
 const DB_NAME = 'ImCounsulting';
 
-
-
-async function submitFile(req: Request, res: Response) {
-  try {
-    await uploadSingle(req, res, cb);
-    const file = req.file;
-    if (!file) {
-      throw new Error('No file provided');
-    }
-    
-    // Upload the file to UploadThings and save the URL
-    const uploadedUrl = await uploadFileToUploadThings(file);
-    res.json({ message: 'File uploaded successfully', url: uploadedUrl });
-  } catch (error) {
-    console.error('Error uploading file:', error);
-    res.status(500).json({ error: 'Failed to upload file' });
-  }
-}
 
 interface CustomFileList extends FileList {
   item(index: number): File | null;
@@ -41,6 +23,26 @@ class SubmissionError extends Error {
     super(message);
   }
 }
+
+
+// async function submitFile(req: Request, res: Response) {
+//   try {
+//     await uploadSingle(req, res, cb);
+//     const file = req.file;
+//     if (!file) {
+//       throw new Error('No file provided');
+//     }
+    
+//     // Upload the file to UploadThings and save the URL
+//     const uploadedUrl = await uploadFileToUploadThings(file);
+//     res.json({ message: 'File uploaded successfully', url: uploadedUrl });
+//   } catch (error) {
+//     console.error('Error uploading file:', error);
+//     res.status(500).json({ error: 'Failed to upload file' });
+//   }
+// }
+
+
 // const file: Express.Multer.File = File
 
 
@@ -57,51 +59,63 @@ interface IssueData {
 
 
 
-async function submitIssueWithFile(req: Request, res: Response) {
-  try{
-    const { title, description } = req.body;
-    const file = req.file;
-    if(!file || !title || !description){
-      return res.status(400).json({ error: 'Missing required fields or file'});
-    }
-    const formData = new FormData();
-    formData.append('file', file);
-    try{
-      const response = await axios.post('https://api.uploadthings.com/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-      if(response.status === 200){
-        const issueData = {
-          title, 
-          description,
-          fileUrl: response.data.file_url,
-          createdAt: Date.now()
-        };
-        
-        const insertedId = await saveIssueToMongoDB(issueData);
+// async function submitIssueWithFile(fileList: CustomFileList) {
+//   const formData = new FormData();
+//   try{
+//     // const { title, description } = req.body;
+//     // const file = req.file;
+//     // if(!file || !title || !description){
+//     //   return res.status(400).json({ error: 'Missing required fields or file'});
+//     // }
+//     const formData = new FormData();
+//     for(let i =0; i < fileList.length; i++){
+//       formData.append(`files[]`, fileList[i]);
+//     }
+    
+//     try{
+//       const response = await axios.post('https://api.uploadthings.com/upload', formData, {
+//         headers: {
+//           'Content-Type': 'multipart/form-data',
+//           Authorization: `Bearer ${UPLOADTHING_TOKEN}`,
+//         },
+//       });
+//       // if(response.status === 200){
+//       //   const issueData = {
+//       //     title, 
+//       //     description,
+//       //     fileUrl: response.data.file_url,
+//       //     createdAt: Date.now()
+//       //   };
+//         return response.data.file_urls;
+
+//     } catch (error) {
+//       throw new Error(`Failed to upload files: ${error}`);
+//     }
+//       //   const insertedId = await saveIssueToMongoDB(issueData);
        
-        res.json({ message: 'Issue saved successfully', id: insertedId });
-      } else {
-        throw new Error('File upload failed')
-      }
-    } catch(error) {
-      console.error('Error uploading file:', error);
-      res.status(500).json({error: 'Internal Server Error'});
-    } catch(error) {
-      console.error('Error handling request:', error);
-      res.status(400).json({ error: 'Bad Request'});
-    }
-  }
+//       //   res.json({ message: 'Issue saved successfully', id: insertedId });
+//       // } else {
+//       //   throw new Error('File upload failed')
+//       // }
+//   //   } catch(error) {
+//   //     console.error('Error uploading file:', error);
+//   //     res.status(500).json({error: 'Internal Server Error'});
+//   //   } catch(error) {
+//   //     console.error('Error handling request:', error);
+//   //     res.status(400).json({ error: 'Bad Request'});
+//   //   }
+//   // }
   
-}
+// }
 
 
-const client = new MongoClient(MONGO_URI!);
+// const client = new MongoClient(MONGO_URI!);
 
 async function uploadFiles(files: FileList): Promise<string> {
   const formData = new FormData();
+  files.forEach((file, index) => {
+    formData.append(`files[${index}]`, file.originalname);
+  })
   for(const file of files){
   formData.append('files[]' , file);
   }
@@ -114,7 +128,7 @@ async function uploadFiles(files: FileList): Promise<string> {
    });
    return response.data.file_url;
   } catch (error: any) {
-    throw new Error('Failed to upload file submit-issue route:,', error)
+    throw new Error('Failed to upload files submit-issue route:,', error)
   }
   
 }
@@ -125,29 +139,28 @@ async function uploadFiles(files: FileList): Promise<string> {
 
 
 
-export async function saveIssueToMongoDB(issue: IssueData): Promise<string> {
-  let client: MongoClient;
-   console.table('IssueData called');
-  
+export async function saveIssueToMongoDB(issuedata: IssueData): Promise<string> {
+  // let client: MongoClient;
+  //  console.table('IssueData called');
+  if(!issuedata.title || !issuedata.description)
   try {
    
-     client = new MongoClient(MONGO_URI!, {});
+    const client = new MongoClient(MONGO_URI!, {});
     await client.connect();
 
     const db = client.db(DB_NAME);
-    const collection: Collection<IssueData> = db.collection('issues_collection');
-    const result: InsertOneResult<IssueData> = await collection.insertOne(issue);
+    const collection = db.collection('issues_collection');
+    const result = await collection.insertOne(issuedata);
+    
+    await client.close();
+    
     return result.insertedId.toString();
     
 
   } catch (error) {
     console.error('Error connecting to MongoDB check submit file', error);
-    throw new Error('Failed to save issue: ');
+    throw new Error('Failed to save issue submit-issue-with file route');
 
-  } finally {
-    if (client!) {
-      await client.close();
-    }
   }
 }
 export default async function handler(req: Request, res: Response) {
@@ -158,11 +171,16 @@ export default async function handler(req: Request, res: Response) {
   }
 
   try {
-    const { textContent } = req.body;
-    const file: Express.Multer.File | undefined = req.file;
+    const { title, description } = req.body;
+    let fileUrls: string | string[] | undefined;
+    const files = Array.isArray(req.file) ? req.file: (req.file ? [req.file] : []);
 
+
+    for (fileUrls = await uploadedFiles(FileList))
     // client;
- 
+    if (files.length > 0) {
+      fileUrls = await uploadFiles(files);
+    }
 
     let issueData: IssueData & { fileUrls: CustomFileList;} = {
 
