@@ -7,13 +7,14 @@ import React, { useState } from 'react';
 
 
 
-function Dashboard() {
+const Dashboard = () =>  {
   const [textContent, setTextContent] = useState('');
   const [uploadedFiles, setUploadedFiles] = useState<FileList | null>(null);
   const [submitStatus, setSubmitStatus] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-const handleFileUpload = async(files: File[]) => {
+const handleSubmitButtonClick = async(files: File[]) => {
+  
   try {
     if(!files.length) return;
     const response = await fetch('/api/upload', {
