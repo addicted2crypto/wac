@@ -1,28 +1,39 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import  { NextApiRequest, NextApiResponse } from 'next';
+
 import { getAuth } from '@clerk/nextjs/server';
-
-import { connectToDatabase, insertIssue } from '@/lib/mongodb';
+import { connectToDatabase } from '@/lib/mongodb';
 import { Db } from 'mongodb';
-import multer from 'multer';
-import { Request as ExpressRequest } from 'express';
-
+import  multer from 'multer';
 
 
 
 const upload = multer({
-  dest: './uploads/',
-})
-//bringing in mongo connection from connectToDatabase! winning
+  dest: './uploads',
+ 
+  limits: {fileSize: 1000000},
+});
 
-interface NextApiRequestWithFile extends ExpressRequest {
+
+//bringing in mongo connection from connectToDatabase! winning
+// const uploadHandler = createUploadHandler({
+//   upload,
+//   maxBodySize: 5 * 1024 * 1024,
+// })
+interface NextApiRequestWithFile extends NextApiRequest {
   file?: any;
 }
+
+interface CustomNextApiRequest extends NextApiRequest {
+  file?: any;
+}
+
+
 
 export const config = {
   api: {
     bodyParser: false,
   },
-  dest: '/uploads/',
+  // dest: '/uploads/',
 };
 
 interface SubmitIssueRequestBody {
@@ -30,10 +41,28 @@ interface SubmitIssueRequestBody {
 
 }
 
-const dbClient = await connectToDatabase();
+async function saveUploadedFile(file: any): Promise<string[]> {
+ 
+  return [file.filename];
+}
 
-export  async function handler(req: NextApiRequest, res: NextApiResponse) {
-  
+// const dbClient = await connectToDatabase();
+
+export  async function handler(req: CustomNextApiRequest, res: NextApiResponse) {
+  // 
+  const app = nextConnect<NextApiRequest, NextApiResponse>({onError,});
+
+  app.use(upload.single('file'));
+ 
+    await new Promise((resolve, reject) => {
+    //   const uploadSingle = upload.single('file');
+    //   uploadSingle(req, res, (err) => {
+    //     if(err){
+    //       return reject(err)
+    //     }
+    //   })
+    // })
+  })
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method not allowed' });
   }
@@ -44,38 +73,53 @@ export  async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (!userId) {
       return res.status(401).json({ message: 'User is not authenticated' });
     }
+    try {
+      const userId = getAuth(req)?.userId;
 
-    upload.single('file')(req: any, res, (err) => {
-      if(err){
-        throw err;
+      if(!userId) {
+        return res.status(401).json({message: 'User is not authenticated'});
       }
-    })
 
+      await upload.single('file')(req, res, (err) => {
+       
+        if(err instanceof multer.MulterError) {
+          console.log('Multer err intance error');
+        } else if (err){
+          console.log('Handle error for upload single better');
+        }
+      });
+    
+    } catch(error){
+      console.error(error);
+    }
+    
     const { textContent } = req.body as SubmitIssueRequestBody;
     // console.log('Request body: ', { textContent, files });
     if(!textContent.trim()) {
       throw new Error('Text content is required');
     }
-
+  
     // const issues = db.collection('ImCounsulting');  /* db name */
 
 
-    let fileUrls: string | undefined;
+    let fileUrls: string[] | undefined;
 
   //  console.log('fileUrls: ',fileUrls)
   if(req.file && req.file.filename) {
-
+    // const savedFileUrl = await saveUploadedFile(req.file);
+    fileUrls = await saveUploadedFile(req.file);
   }
 
-    if (files && Array.isArray(files) && files.length > 0 ) {
-      fileUrls = files.map(file => file.url).filter(Boolean) 
-    }
+    // if (files && Array.isArray(files) && files.length > 0 ) {
+    //   fileUrls = files.map(file => file.url).filter(Boolean) 
+    // }
       
       const issueData = {userId, textContent, fileUrls }; 
-
+      const dbClient = await connectToDatabase();
+      // const result = await insertIssue(dbClient.db, issueData);
         // const result = await insertIssue(dbClient.db, issueData);
 
-        console.log('Saved to MongoDb', result.insertedId);
+        // console.log('Saved to MongoDb', result.insertedId);
     
 
  
