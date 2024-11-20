@@ -6,6 +6,7 @@ import axios from 'axios';
 import { User } from '@clerk/nextjs/dist/types/server';
 import { connectToDatabase } from '@/lib/mongodb';
 
+
 // import { upload, uploadSingle } from '../multerConfig'
 // import multer from 'multer';
 // import { stringify } from 'querystring';
@@ -79,7 +80,7 @@ interface IssueData {
   description: string;
   userId: string;
   textContent: string;
-  fileUrls: CustomFileList;
+  fileUrls: CustomFileList & { [key: number]: Express.Multer.File};
   createdAt: number;
 
 
@@ -98,28 +99,63 @@ export async function saveIssueToMongoDB(issuedata: IssueData & { fileUrls: Cust
       const client = new MongoClient(MONGO_URI!, {});
       await client.connect();
 
-      const db = client.db(DB_NAME);
-      const issuesCollection = db.collection('issues_collection');
-      const result = await issuesCollection.insertOne({
-        title: issuedata.description,
-        textContent: issuedata.textContent,
-        files: issuedata.fileUrls ? Array.from(issuedata.fileUrls).map(file => file.name) : undefined
-      });
+    const db = client.db(DB_NAME);
+    const collection = db.collection('issues_collection');
+    const result = await collection.insertOne(issuedata);
+    
+    await client.close();
+    
+    return result.insertedId.toString();
+    
 
-      return result.insertedId.toString();
-    } finally {
-      await client.close();
-    }
-  }
-      
-
-
-//     } catch (error) {
-//       console.error('Error connecting to MongoDB check submit file', error);
-//       throw new Error('Failed to save issue submit-issue-with file route');
+  } catch (error) {
+    console.error('Error connecting to MongoDB check submit file', error);
+    throw new Error('Failed to save issue submit-issue-with file route');
 
 //     }
-// }
+}
+}
+
+interface UploadData {
+  title: string;
+  description: string;
+  userId: string;
+  textContent: string;
+  [key: string]: any,
+}
+
+async function uploadToUploadThings(data: UploadData): Promise<string[]> {
+  const fileUrls = [];
+  
+  const formData = new FormData();
+  for (const key in data) {
+    if (typeof data[key] === 'string') {
+      formData.append(key, data[key]);
+    }
+  }
+  
+  try {
+    const response = await axios.post('https://api.uploadthings.com/upload ', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        'Authorization': `Bearer ${UPLOADTHING_TOKEN}`,
+      },
+    });
+    
+    if (response.status === 200) {
+      fileUrls.push(response.data.data.link);
+    } else {
+      throw new Error(`Error uploading to UploadThings: ${response.statusText}`);
+    }
+  } catch (error: any) {
+    console.error('Failed to upload to UploadThings:', error.message);
+    throw error;
+  }
+  
+  return fileUrls;
+}
+// 
+
 export default async function handler(req: Request, res: Response) {
 
 
@@ -129,87 +165,95 @@ export default async function handler(req: Request, res: Response) {
 
   try {
     const { title, description } = req.body;
-    let fileUrls: string | string[] | undefined;
+    // let fileUrls: string | string[] | undefined;
    
-    if(req.files && Object.keys(req.files).length > 0) {
-      fileUrls = await uploadFiles(Object.values(req.files));
-    }
+    // if(req.files && Object.keys(req.files).length > 0) {
+    //   fileUrls = await uploadFiles(Object.values(req.files));
+    // }
 
-
+// 
     
 
-    const issueData: IssueData  = {
-
-      // userId: 'current_user_id',
+    const uploadData: UploadData  = {
       title,
       description,
-      textContent
-      
+      userId: 'current_user_id',
+      textContent: 'Data_text_field',
     };
-    if (fileUrls) {
-      issueData.file = new FileList();
-      
-      for (const url of fileUrls) {
-        fetch(url)
-          .then(response => response.blob())
-          .then(blob => {
-            const file = new File([blob], 'image.jpg', { type: blob.type });
-            issueData.files = new FileList([...issueData.files, file]);
-          })
-          .catch(error => console.error('Error fetching file:', error));
-      }
+
+    const fileUrls = await uploadToUploadThings(uploadData);
+    
+    let issueFileList: CustomFileList & { [ key: number ] : File} = {
+      length: 0,
+      item: (index) => null,
+      [Symbol.iterator](): ArrayIterator<File> {
+        let index = 0;
+        const self = this;
+        
+        return  () => {
+            next: function() {
+                if (index < self.length) {
+                    const file = self[index];
+                    index++;
+                    return { value: file, done: false };
+                }
+                return { value: undefined, done: true };
+            },
+            
+            [Symbol.iterator]: function() {
+                return this;
+            }
+        }
     }
+      // [Symbol.iterator](): () => IteratorResult<File, void> {
+      //   let index = 0;
+      //   return () => {
+      //     if (index < this.length) {
+      //       const file = this[index];
+      //       index++
+      //       return {value: file, done: false };
+      //     }
+      //     return { value: undefined, done: true}
+      //   }
+        // const items = Object.values(this);
+        // return {
+        //   next(): IteratorResult<File> {
+        //     if(index === items.length) {
+        //       return { done: true, value: undefined};
+        //     } else {
+        //       return { value: items[index++], done: false };
+        //     }
+        //   },
+        //   [Symbol.iterator]() {
+           
+
+
+    const uploadedFile = req.file as Express.Multer.File;
+    issueFileList[issueFileList.length] = uploadedFile;
+    Object.defineProperty(issueFileList, 'length', {value: issueFileList.length + 1})
+
+
+    const issueData: IssueData = {
+      ...uploadData,
+      fileUrls: issueFileList,
+      createdAt: Date.now()
+    };
+
+
+    // if (File) {
+    //   const fileList = issueData.fileUrls as CustomFileList & { [key: number]: Express.Multer.File };
+    //   (fileList[fileList.length] as Express.Multer.File) = file;
+    //   Object.defineProperty(fileList, 'length', { value: fileList.length + 1});
+    // }
     
     const insertedId = await saveIssueToMongoDB(issueData);
     
     res.json({ message: 'Issue saved successfully', id: insertedId });
-  } catch (error) {
+  } catch (error: any) {
     console.error('An error occurred:', error.message);
     res.status(500).json({ error: 'Internal Server Error' });
   }
-      // fileUrls: {
-      //   length: 0,
-      //   item: (index) => null,
-
-      //   [Symbol.iterator]() {
-      //     let index = 0;
-      //     const items = Object.values(this);
-      //     return {
-      //       next(): IteratorResult<File> {
-      //         if (index === items.length) {
-      //           return { done: true, value: undefined };
-      //         } else {
-      //           return { value: items[index++], done: false };
-      //         }
-      //       },
-      //       [Symbol.iterator]() {
-      //         return this;
-      //       },
-      //     };
-      //   },
-      // },
-     
-      // createdAt: Date.now(),
-    };
-
-//     if (file) {
-//       const fileList = issueData.fileUrls as CustomFileList & { [key: number]: Express.Multer.File };
-//       (fileList[fileList.length] as Express.Multer.File) = file;
-//       Object.defineProperty(fileList, 'length', { value: fileList.length + 1 });
-//     }
-
-//     const insertedId = await saveIssueToMongoDB(issueData);
-
-//     res.json({ message: 'Issue saved successfully', id: insertedId });
-//   } catch (error: unknown) {
-//     console.error('An error occured: ', error);
-//     if (error instanceof Error) {
-//       res.status(500).json({ error: error.message });
-//       res.status(500).json({ error: 'Internal Server Error' });
-//     } else {
-//       res.status(500).json({ error: 'Internal Server Error' });
-//     }
   
-//   }
 
-// }
+
+}
