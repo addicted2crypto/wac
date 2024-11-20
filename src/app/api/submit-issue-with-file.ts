@@ -98,25 +98,18 @@ export async function saveIssueToMongoDB(issuedata: IssueData & { fileUrls: Cust
       const client = new MongoClient(MONGO_URI!, {});
       await client.connect();
 
-      const db = client.db(DB_NAME);
-      const issuesCollection = db.collection('issues_collection');
-      const result = await issuesCollection.insertOne({
-        title: issuedata.description,
-        textContent: issuedata.textContent,
-        files: issuedata.fileUrls ? Array.from(issuedata.fileUrls).map(file => file.name) : undefined
-      });
+    const db = client.db(DB_NAME);
+    const collection = db.collection('issues_collection');
+    const result = await collection.insertOne(issuedata);
+    
+    await client.close();
+    
+    return result.insertedId.toString();
+    
 
-      return result.insertedId.toString();
-    } finally {
-      await client.close();
-    }
-  }
-      
-
-
-//     } catch (error) {
-//       console.error('Error connecting to MongoDB check submit file', error);
-//       throw new Error('Failed to save issue submit-issue-with file route');
+  } catch (error) {
+    console.error('Error connecting to MongoDB check submit file', error);
+    throw new Error('Failed to save issue submit-issue-with file route');
 
 //     }
 // }
@@ -140,24 +133,39 @@ export default async function handler(req: Request, res: Response) {
 
     const issueData: IssueData  = {
 
-      // userId: 'current_user_id',
-      title,
-      description,
-      textContent
+      userId: 'current_user_id',
+      title: 'Issue Title',
+      description: 'Issue Description',
+      textContent,
+      fileUrls: {
+        length: 0,
+        item: (index) => null, 
       
+        [Symbol.iterator]() {
+          let index = 0;
+          const items = Object.values(this);
+          return {
+            next(): IteratorResult<File> {
+              if (index === items.length) {
+                return { done: true, value: undefined };
+              } else {
+                return { value: items[index++], done: false };
+              }
+            },
+            [Symbol.iterator]() {
+              return this;
+          },
+        };
+      },
+    },
+      // },
+      createdAt: Date.now(),
     };
-    if (fileUrls) {
-      issueData.file = new FileList();
-      
-      for (const url of fileUrls) {
-        fetch(url)
-          .then(response => response.blob())
-          .then(blob => {
-            const file = new File([blob], 'image.jpg', { type: blob.type });
-            issueData.files = new FileList([...issueData.files, file]);
-          })
-          .catch(error => console.error('Error fetching file:', error));
-      }
+
+    if (file) {
+      const fileList = issueData.fileUrls as CustomFileList & { [key: number]: Express.Multer.File };
+      (fileList[fileList.length] as Express.Multer.File) = file;
+      Object.defineProperty(fileList, 'length', { value: fileList.length + 1});
     }
     
     const insertedId = await saveIssueToMongoDB(issueData);
