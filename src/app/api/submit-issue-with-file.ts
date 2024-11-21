@@ -174,77 +174,31 @@ export default async function handler(req: Request, res: Response) {
 // 
     
 
-    const uploadData: UploadData  = {
+    const issueData: IssueData  = {
+
+      // userId: 'current_user_id',
       title,
       description,
-      userId: 'current_user_id',
-      textContent: 'Data_text_field',
+      textContent
+      
     };
-
-    const fileUrls = await uploadToUploadThings(uploadData);
-    
-    let issueFileList: CustomFileList & { [ key: number ] : File} = {
-      length: 0,
-      item: (index) => null,
-      [Symbol.iterator](): ArrayIterator<File> {
-        let index = 0;
-        const self = this;
-        
-        return  () => {
-            next: function() {
-                if (index < self.length) {
-                    const file = self[index];
-                    index++;
-                    return { value: file, done: false };
-                }
-                return { value: undefined, done: true };
-            },
-            
-            [Symbol.iterator]: function() {
-                return this;
-            }
-        }
+    if (fileUrls) {
+<<<<<<<<< Temporary merge branch 1
+      issueData.files = new FileList();
+=========
+      issueData.file = new FileList();
+>>>>>>>>> Temporary merge branch 2
+      
+      for (const url of fileUrls) {
+        fetch(url)
+          .then(response => response.blob())
+          .then(blob => {
+            const file = new File([blob], 'image.jpg', { type: blob.type });
+            issueData.files = new FileList([...issueData.files, file]);
+          })
+          .catch(error => console.error('Error fetching file:', error));
+      }
     }
-      // [Symbol.iterator](): () => IteratorResult<File, void> {
-      //   let index = 0;
-      //   return () => {
-      //     if (index < this.length) {
-      //       const file = this[index];
-      //       index++
-      //       return {value: file, done: false };
-      //     }
-      //     return { value: undefined, done: true}
-      //   }
-        // const items = Object.values(this);
-        // return {
-        //   next(): IteratorResult<File> {
-        //     if(index === items.length) {
-        //       return { done: true, value: undefined};
-        //     } else {
-        //       return { value: items[index++], done: false };
-        //     }
-        //   },
-        //   [Symbol.iterator]() {
-           
-
-
-    const uploadedFile = req.file as Express.Multer.File;
-    issueFileList[issueFileList.length] = uploadedFile;
-    Object.defineProperty(issueFileList, 'length', {value: issueFileList.length + 1})
-
-
-    const issueData: IssueData = {
-      ...uploadData,
-      fileUrls: issueFileList,
-      createdAt: Date.now()
-    };
-
-
-    // if (File) {
-    //   const fileList = issueData.fileUrls as CustomFileList & { [key: number]: Express.Multer.File };
-    //   (fileList[fileList.length] as Express.Multer.File) = file;
-    //   Object.defineProperty(fileList, 'length', { value: fileList.length + 1});
-    // }
     
     const insertedId = await saveIssueToMongoDB(issueData);
     
